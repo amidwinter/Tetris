@@ -40,7 +40,7 @@ public class Parser
 		return success;
 	}
 	
-	public Map getMessage()
+	public Map<String,String> getMessage()
 	{
 		return msg;
 	}
