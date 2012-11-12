@@ -28,6 +28,9 @@ public class Parser
 		String tokens[] = JSON.split(",");
 		for(int i = 0; i < tokens.length; i++)
 		{
+			tokens[i] = tokens[i].replaceAll("\"", "");
+			tokens[i] = tokens[i].replace("{", "");
+			tokens[i] = tokens[i].replace("}", "");
 			String objectPair[] = tokens[i].split(":");
 			msg.put(objectPair[0], objectPair[1]);
 			
