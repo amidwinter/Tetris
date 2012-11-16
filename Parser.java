@@ -166,7 +166,7 @@ public class Parser
 			String tokenSplit[] = tokens[i].split(":");
 			
 			if(tokenSplit[0].equals("comm_type"))
-				return commType[1];
+				return tokenSplit[1];
 		}
 	}
 	
