@@ -21,7 +21,7 @@ public class Tetris {
 		reqRespSocket.connect(reqRespServer);
 		
 		//generate connect message
-		String matchConnectMessage = "{\"comm_type\" : \"MatchConnect\", \"match_token\" : \"" + matchToken + "\", \"team_name\" : \"Team 70\",\"passddword\" : \"password\"}";
+		String matchConnectMessage = "{\"comm_type\" : \"MatchConnect\", \"match_token\" : \"" + matchToken + "\", \"team_name\" : \"Team 70\",\"password\" : \"password\"}";
 		
 		int i = 0;
 		boolean connected = false;
