@@ -3,12 +3,12 @@ import java.util.Scanner;
 import java.util.Map;
 import java.util.HashMap;
 
-public class Tetris {
-	private static String clientToken;
-	
+public class Tetris {	
 	public static void main(String[] args) {	
 		String server = args[0];
 		String matchToken = args[1];
+		
+		String clientToken;
 		
 		Board currentBoard = new Board();
 		Piece currentPiece = new Piece();
@@ -22,20 +22,36 @@ public class Tetris {
 		//generate connect message
 		String matchConnectMessage = "{\"comm_type\" : \"MatchConnect\", \"match_token\" : \"" + matchToken + "\", \"team_name\" : \"Team 70\",\"password\" : \"password\"}";
 		
-		//send connect message over req/resp channel
-		byte[] connectionRequest = matchConnectMessage.getBytes();
-		reqRespSocket.send(connectionRequest, 0);
-		byte[] connectionResponseByteArray = reqRespSocket.recv(0);
-        String connectionResponse = new String(connectionResponseByteArray);
-        System.out.println(connectionResponse );
-		
-		//parse connection response to get client token
-		Parser parser = new Parser();
-		boolean success = parser.parseMessage(connectionResponse);
-		
-        Map<String, String> connectionResponseMap = parser.getMessage();
-        
-        clientToken = connectionResponseMap.get("client_token");
+		int i = 0;
+		boolean connected = false;
+		while(!connected) {
+			//send connect message over req/resp channel
+			byte[] connectionRequest = matchConnectMessage.getBytes();
+			reqRespSocket.send(connectionRequest, 0);
+			byte[] connectionResponseByteArray = reqRespSocket.recv(0);
+	        String connectionResponse = new String(connectionResponseByteArray);
+	        System.out.println(connectionResponse );
+			
+			//parse connection response to get client token
+			Parser parser = new Parser();
+			boolean success = parser.parseMessage(connectionResponse);
+	        Map<String, String> connectionResponseMap = parser.getMessage();
+	        String connectionResponseCommType = connectionResponseMap.get("commType");
+	        if(connectionResponseCommType.equals("ErrorResp")){
+	        	System.out.println("Error connecting to match with matchToken = " + matchToken + " on server = " + server + "! Trying again!\n");
+	        	
+	        	if(i > 10) {
+	        		System.err.println("Could not connect to server " + server + " with matchToken = " + matchToken);
+	        		System.exit(1);
+	        	}
+	        }
+	        else if(connectionResponseCommType.equals("MatchConnect")) {
+	        	connected = true;
+	        	clientToken = connectionResponseMap.get("client_token");
+	        }
+	        
+	        i++;
+		}
         
         System.out.println("client token: " + clientToken);
         
