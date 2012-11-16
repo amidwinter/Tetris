@@ -168,6 +168,7 @@ public class Parser
 			if(tokenSplit[0].equals("comm_type"))
 				return tokenSplit[1];
 		}
+		return "error";
 	}
 	
 	public Map<String,String> getMessage()
