@@ -81,7 +81,7 @@ public class Tetris {
 
 			//if comm type is GameBoardState, set new values for board state and check if changes have happened
 			//else if comm type is GamePieceState, set new values for piece state and check if changes have happened
-			String pubSubCommType = pubSubMessageMap.get("comm_type");
+			String pubSubCommType = "GameBoardState";//pubSubMessageMap.get("comm_type");
 			if(pubSubCommType.equals("GameBoardState")) {
 //				int boardState = Integer.parseInt(pubSubMessageMap.get("board_state"));
 //				int pieceNumber = Integer.parseInt(pubSubMessageMap.get("piece_number"));
@@ -135,7 +135,7 @@ public class Tetris {
 			}
 			//else if comm type is MatchEnd, kill movePicker thread (if one exists) and set matchEnded to true;
 			else if(pubSubCommType.equals("MatchEnd")) {
-				System.out.println("Match Ended! Status: " + pubSubMessageMap.get("status"));
+//				System.out.println("Match Ended! Status: " + pubSubMessageMap.get("status"));
 
 				//if movePicker thread exists, kill it
 				if(movePicker != null && movePicker.isAlive())
