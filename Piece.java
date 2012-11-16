@@ -1,4 +1,6 @@
-
+/*
+ * Stores information about the current piece (supplied by pubSub connection)
+ */
 public class Piece {
 	private int orientation;
 	private String piece;
@@ -52,5 +54,25 @@ public class Piece {
 		this.number = number;
 		this.row = row;
 		this.col = col;
+	}
+	
+	public int getOrientation() {
+		return this.orientation;
+	}
+	
+	public String getPiece() {
+		return this.piece;
+	}
+	
+	public int getNumber() {
+		return this.number;
+	}
+	
+	public int getRow() {
+		return this.row;
+	}
+	
+	public int getCol() {
+		return this.col;
 	}
 }

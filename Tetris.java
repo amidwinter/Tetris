@@ -64,6 +64,7 @@ public class Tetris {
   		pubSubSocket.connect(pubSubServer);
   		pubSubSocket.subscribe((matchToken).getBytes());  		
 
+  		
       	boolean matchEnded = false;
       	
 		//monitor pub/sub waiting for game to start
@@ -154,15 +155,5 @@ public class Tetris {
 		      }
 		      i++;
 		    }
-		//loop until game ended
-//		while(true) {
-//			if(newMessage==true) {
-//				//read state channel information (pub/sub)
-//				
-//				//determine move
-//				
-//				//create and send move message
-//			}
-//		}
 	}
 }

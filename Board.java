@@ -1,4 +1,6 @@
-
+/*
+ * Stores information about the board (supplied by pubSub connection)
+ */
 public class Board {
 	private int boardState;
 	private int pieceNumber;
