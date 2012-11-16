@@ -36,7 +36,7 @@ public class Tetris {
 			//parse connection response to get client token
 			boolean success = parser.parseMessage(connectionResponse);
 	        Map<String, String> connectionResponseMap = parser.getMessage();
-	        String connectionResponseCommType = connectionResponseMap.get("commType");
+	        String connectionResponseCommType = connectionResponseMap.get("comm_type");
 	        if(connectionResponseCommType.equals("ErrorResp")){
 	        	System.out.println("Error connecting to match with matchToken = " + matchToken + " on server = " + server + "! Trying again!\n");
 	        	
