@@ -97,6 +97,7 @@ public class Parser
 		boolean success = true;
 		// Deciding what type of message this is
 		String commType = getCommType(JSON);
+		System.out.println(commType);
 		if(commType.equals("MatchConnectResp"))
 		{
 			MatchConnect MC = gson.fromJson(JSON, MatchConnect.class);
