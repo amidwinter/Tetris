@@ -8,7 +8,7 @@ public class Tetris {
 		String server = args[0];
 		String matchToken = args[1];
 		
-		String clientToken;
+		String clientToken = "";
 		
 		Board currentBoard = new Board();
 		Piece currentPiece = new Piece();
