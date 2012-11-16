@@ -159,11 +159,15 @@ public class Parser
 	{
 		String messageType = JSON.replaceAll("\\s", "");
 		String tokens[] = messageType.split(",");
-		tokens[0] = tokens[0].replaceAll("\"", "");
-		tokens[0] = tokens[0].replace("{", "");
-		tokens[0] = tokens[0].replace("}", "");
-		String commType[] = tokens[0].split(":");
-		return commType[1];
+		for(int i = 0; i < tokens.length; i++) {
+			tokens[i] = tokens[i].replaceAll("\"", "");
+			tokens[i] = tokens[i].replace("{", "");
+			tokens[i] = tokens[i].replace("}", "");
+			String tokenSplit[] = tokens[i].split(":");
+			
+			if(tokenSplit[0].equals("comm_type"))
+				return commType[1];
+		}
 	}
 	
 	public Map<String,String> getMessage()
