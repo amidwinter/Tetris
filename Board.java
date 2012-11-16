@@ -2,7 +2,7 @@
 public class Board {
 	private int boardState;
 	private int pieceNumber;
-	private int[] clearedRows;
+	private String clearedRows;
 	
 	public Board() {
 		boardState = 0;
@@ -10,7 +10,7 @@ public class Board {
 		clearedRows = null;
 	}
 	
-	public Board(int boardState, int pieceNumber, int[] clearedRows) {
+	public Board(int boardState, int pieceNumber, String clearedRows) {
 		this.boardState = boardState;
 		this.pieceNumber = pieceNumber;
 		this.clearedRows = clearedRows;
@@ -32,7 +32,7 @@ public class Board {
 	}
 	
 	// Sets the board data to data specified by the parameters
-	public void setBoard(int boardState, int pieceNumber, int[] clearedRows) {
+	public void setBoard(int boardState, int pieceNumber, String clearedRows) {
 		this.boardState = boardState;
 		this.pieceNumber = pieceNumber;
 		this.clearedRows = clearedRows;

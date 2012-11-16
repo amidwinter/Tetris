@@ -1,7 +1,7 @@
 
 public class Piece {
 	private int orientation;
-	private char piece;
+	private String piece;
 	private int number;
 	private int row;
 	private int col;
@@ -14,7 +14,7 @@ public class Piece {
 		col = 0;
 	}
 	
-	public Piece(int orientation, char piece, int number, int row, int col) {
+	public Piece(int orientation, String piece, int number, int row, int col) {
 		this.orientation = orientation;
 		this.piece = piece;
 		this.number = number;
@@ -31,10 +31,10 @@ public class Piece {
 	 * 	@returns True, if piece data has changed
 	 * 	@returns False, if piece data has not changed
 	 */
-	public boolean hasChanged(int orientation, char piece, int number, int row, int col) {
+	public boolean hasChanged(int orientation, String piece, int number, int row, int col) {
 		if(orientation != this.orientation)
 			return true;
-		else if(piece != this.piece) 
+		else if(!piece.equals(this.piece)) 
 			return true;
 		else if(number != this.number)
 			return true;
@@ -46,7 +46,7 @@ public class Piece {
 			return false;
 	}
 	
-	public void setPiece(int orientation, char piece, int number, int row, int col) {
+	public void setPiece(int orientation, String piece, int number, int row, int col) {
 		this.orientation = orientation;
 		this.piece = piece;
 		this.number = number;
