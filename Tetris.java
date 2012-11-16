@@ -91,12 +91,16 @@ public class Tetris {
 				//if game board has changed, kill movePicker thread (if one exists) and create a new one. 
 				//Also, set new values for board
 				if(currentBoard.hasChanged(boardState, pieceNumber)) {
-					//if movePicker thread exists, kill it
-
-					//create new movePicker thread
-
 					//set new values for board
 					currentBoard.setBoard(boardState, pieceNumber, clearedRows);
+					
+					//if movePicker thread exists, kill it
+					if(movePicker != null && movePicker.isAlive()) {
+						movePicker.interrupt();
+					}
+					
+					//create new movePicker thread
+					movePicker = new MovePicker(clientToken, reqRespSocket, currentBoard, currentPiece);
 				}
 			}
 			//else if comm type is GamePieceState, set new values for piece state and check if changes have happened
@@ -110,18 +114,24 @@ public class Tetris {
 				//if piece has changed, kill movePicker thread (if one exists) and create new one.
 				//Also, set new values for piece
 				if(currentPiece.hasChanged(orientation, piece, number, row, col)) {
-					//if movePicker thread exists, kill it
-
-					//create new movePicker thread
-
 					//set new values for piece
 					currentPiece.setPiece(orientation, piece, number, row, col);
+					
+					//if movePicker thread exists, kill it
+					if(movePicker != null && movePicker.isAlive()) {
+						movePicker.interrupt();
+					}
+					
+					//create new movePicker thread
+					movePicker = new MovePicker(clientToken, reqRespSocket, currentBoard, currentPiece);
 				}
 			}
 			//else if comm type is GameEnd, kill movePicker thread (if one exists)
 			else if(pubSubCommType.equals("GameEnd")) {
 				//if movePicker thread exists, kill it
-
+				if(movePicker != null && movePicker.isAlive())
+					movePicker.interrupt();
+				
 				continue;
 			}
 			//else if comm type is MatchEnd, kill movePicker thread (if one exists) and set matchEnded to true;
@@ -129,7 +139,9 @@ public class Tetris {
 				System.out.println("Match Ended! Status: " + pubSubMessageMap.get("status"));
 
 				//if movePicker thread exists, kill it
-
+				if(movePicker != null && movePicker.isAlive())
+					movePicker.interrupt();
+				
 				matchEnded = true;
 
 				continue;
