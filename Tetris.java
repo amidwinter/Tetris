@@ -1,6 +1,7 @@
 import org.zeromq.ZMQ;
 import java.util.Scanner;
-//import Parser.java;
+import java.util.Map;
+import java.util.HashMap;
 
 public class Tetris {
 	private static String clientToken;
@@ -13,7 +14,6 @@ public class Tetris {
 		String reqRespServer = "tcp://" + server + ":5557";
 		ZMQ.Context reqRespContext = ZMQ.context(1);
 		ZMQ.Socket reqRespSocket = reqRespContext.socket(ZMQ.REQ);
-		
 		reqRespSocket.connect(reqRespServer);
 		
 		//generate connect message
@@ -26,6 +26,16 @@ public class Tetris {
         String connectionResponse = new String(connectionResponseByteArray);
         System.out.println(connectionResponse );
 		
+		//parse connection response to get client token
+		Parser parser = new Parser();
+		boolean success = parser.parseMessage(connectionResponse);
+		
+        Map<String, String> connectionResponseMap = parser.getMessage();
+        
+        clientToken = connectionResponseMap.get("client_token");
+        
+        System.out.println("client token: " + clientToken);
+        
         //create pub/sub connection
         String pubSubServer = "tcp://" + server + ":5556";
   		String streamName = "";
@@ -33,34 +43,11 @@ public class Tetris {
   		ZMQ.Socket pubSubSocket = pubSubContext.socket(ZMQ.SUB);
   		
   		pubSubSocket.connect(pubSubServer);
-  		pubSubSocket.subscribe((matchToken).getBytes());
-        
-  		connectionResponse = connectionResponse.replaceAll("\\s", "");
-  		Scanner scanner = new Scanner(connectionResponse);
-  		//scanner.useDelimiter("\"client_token\":\"");
-  		//System.out.println(scanner.next());
-  		scanner.useDelimiter("\"");
-  		clientToken = scanner.next();
-  		clientToken = scanner.next();
-  		clientToken = scanner.next();
-  		clientToken = scanner.next();
-  		clientToken = scanner.next();
-  		clientToken = scanner.next();
-  		clientToken = scanner.next();
-  		clientToken = scanner.next();
-  		System.out.println(clientToken);
-  		
-        
-		//parse connection response to get client token
-		//Parser parser = new Parser();
-		//boolean success = parser.parseMessage(connectionResponse);
-		
-		//clientToken = parser.getClientToken();
+  		pubSubSocket.subscribe((matchToken).getBytes());  		
 
       	int i = 0;
 		//monitor pub/sub waiting for game to start
 		while (true) {
-			System.out.println();
 			System.out.println();
 			System.out.println();
 		      // Read envelope with match token, do not do anything
