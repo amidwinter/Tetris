@@ -100,7 +100,7 @@ public class Tetris {
 					
 					//create new movePicker thread
 					movePicker = new MovePicker(clientToken, reqRespSocket, currentBoard, currentPiece);
-				}
+//				}
 			}
 			//else if comm type is GamePieceState, set new values for piece state and check if changes have happened
 			else if(pubSubCommType.equals("GamePieceState")) {
@@ -123,7 +123,7 @@ public class Tetris {
 					
 					//create new movePicker thread
 					movePicker = new MovePicker(clientToken, reqRespSocket, currentBoard, currentPiece);
-				}
+//				}
 			}
 			//else if comm type is GameEnd, kill movePicker thread (if one exists)
 			else if(pubSubCommType.equals("GameEnd")) {
