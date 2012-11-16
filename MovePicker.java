@@ -1,12 +1,12 @@
 import org.zeromq.ZMQ;
 
-public class movePicker extends Thread{
+public class MovePicker extends Thread{
 	private String clientToken;
 	private ZMQ.Socket reqRespSocket;
 	private Board currentBoard;
 	private Piece currentPiece;
 	
-	public movePicker(String clientToken, ZMQ.Socket reqRespSocket, Board currentBoard, Piece currentPiece) {
+	public MovePicker(String clientToken, ZMQ.Socket reqRespSocket, Board currentBoard, Piece currentPiece) {
 		this.clientToken = clientToken;
 		this.reqRespSocket = reqRespSocket;
 		this.currentBoard = currentBoard;

@@ -12,6 +12,7 @@ public class Tetris {
 		
 		Board currentBoard = new Board();
 		Piece currentPiece = new Piece();
+		Parser parser = new Parser();
 		
 		//create req/resp connection
 		String reqRespServer = "tcp://" + server + ":5557";
@@ -33,7 +34,6 @@ public class Tetris {
 	        System.out.println(connectionResponse );
 			
 			//parse connection response to get client token
-			Parser parser = new Parser();
 			boolean success = parser.parseMessage(connectionResponse);
 	        Map<String, String> connectionResponseMap = parser.getMessage();
 	        String connectionResponseCommType = connectionResponseMap.get("commType");
@@ -65,79 +65,79 @@ public class Tetris {
   		pubSubSocket.subscribe((matchToken).getBytes());  		
 
   		
+  		MovePicker movePicker = null;
       	boolean matchEnded = false;
-      	
 		//monitor pub/sub waiting for game to start
 		while (!matchEnded) {
 			System.out.println();
 			System.out.println();
-		      // Read envelope with match token, do not do anything
-		      String matchTokenMessage = new String(pubSubSocket.recv(0));
-		      
-		      //read envelope with message
-		      String pubSubMessage = new String(pubSubSocket.recv(0));
-		      System.out.println("PubSub: " + pubSubMessage);		      
-		      success = parser.parseMessage(pubSubMessage);
-		      Map <String, String> pubSubMessageMap = parser.getMessage();
-		      
-		      //if comm type is GameBoardState, set new values for board state and check if changes have happened
-		      //else if comm type is GamePieceState, set new values for piece state and check if changes have happened
-		      String pubSubCommType = pubSubMessageMap.get("comm_type");
-		      if(pubSubCommType.equals("GameBoardState")) {
-		    	  int boardState = Integer.parseInt(pubSubMessageMap.get("board_state"));
-		    	  int pieceNumber = Integer.parseInt(pubSubMessageMap.get("piece_number"));
-		    	  String clearedRows = pubSubMessageMap.get("cleared_rows");
-		    	  
-		    	  //if game board has changed, kill movePicker thread (if one exists) and create a new one. 
-		    	  //Also, set new values for board
-		    	  if(currentBoard.hasChanged(boardState, pieceNumber)) {
-		    		  //if movePicker thread exists, kill it
-		    		  
-		    		  //create new movePicker thread
-		    		  
-		    		  //set new values for board
-		    		  currentBoard.setBoard(boardState, pieceNumber, clearedRows);
-		    	  }
-		      }
-		      //else if comm type is GamePieceState, set new values for piece state and check if changes have happened
-		      else if(pubSubCommType.equals("GamePieceState")) {
-		    	  int orientation = Integer.parseInt(pubSubMessageMap.get("orientation"));
-		    	  String piece = pubSubMessageMap.get("piece");
-		    	  int number = Integer.parseInt(pubSubMessageMap.get("number"));
-		    	  int row = Integer.parseInt(pubSubMessageMap.get("row"));
-		    	  int col = Integer.parseInt(pubSubMessageMap.get("col"));
-		    	  
-		    	  //if piece has changed, kill movePicker thread (if one exists) and create new one.
-		    	  //Also, set new values for piece
-		    	  if(currentPiece.hasChanged(orientation, piece, number, row, col)) {
-		    		  //if movePicker thread exists, kill it
-		    		  
-		    		  //create new movePicker thread
-		    		  
-		    		  //set new values for piece
-		    		  currentPiece.setPiece(orientation, piece, number, row, col);
-		    	  }
-		      }
-		      //else if comm type is GameEnd, kill movePicker thread (if one exists)
-		      else if(pubSubCommType.equals("GameEnd")) {
-		    	  //if movePicker thread exists, kill it
-		    	  
-		    	  continue;
-		      }
-		      //else if comm type is MatchEnd, kill movePicker thread (if one exists) and set matchEnded to true;
-		      else if(pubSubCommType.equals("MatchEnd")) {
-		    	  System.out.println("Match Ended! Status: " + pubSubMessageMap.get("status"));
-		    	  
-		    	  //if movePicker thread exists, kill it
-		    	  
-		    	  matchEnded = true;
-		    	  
-		    	  continue;
-		      }
-		      //else, restart loop (there was probably some error in message)
-		      else {
-		    	  continue;
-		      }
+			// Read envelope with match token, do not do anything
+			String matchTokenMessage = new String(pubSubSocket.recv(0));
+
+			//read envelope with message
+			String pubSubMessage = new String(pubSubSocket.recv(0));
+			System.out.println("PubSub: " + pubSubMessage);		      
+			boolean success = parser.parseMessage(pubSubMessage);
+			Map <String, String> pubSubMessageMap = parser.getMessage();
+
+			//if comm type is GameBoardState, set new values for board state and check if changes have happened
+			//else if comm type is GamePieceState, set new values for piece state and check if changes have happened
+			String pubSubCommType = pubSubMessageMap.get("comm_type");
+			if(pubSubCommType.equals("GameBoardState")) {
+				int boardState = Integer.parseInt(pubSubMessageMap.get("board_state"));
+				int pieceNumber = Integer.parseInt(pubSubMessageMap.get("piece_number"));
+				String clearedRows = pubSubMessageMap.get("cleared_rows");
+
+				//if game board has changed, kill movePicker thread (if one exists) and create a new one. 
+				//Also, set new values for board
+				if(currentBoard.hasChanged(boardState, pieceNumber)) {
+					//if movePicker thread exists, kill it
+
+					//create new movePicker thread
+
+					//set new values for board
+					currentBoard.setBoard(boardState, pieceNumber, clearedRows);
+				}
+			}
+			//else if comm type is GamePieceState, set new values for piece state and check if changes have happened
+			else if(pubSubCommType.equals("GamePieceState")) {
+				int orientation = Integer.parseInt(pubSubMessageMap.get("orientation"));
+				String piece = pubSubMessageMap.get("piece");
+				int number = Integer.parseInt(pubSubMessageMap.get("number"));
+				int row = Integer.parseInt(pubSubMessageMap.get("row"));
+				int col = Integer.parseInt(pubSubMessageMap.get("col"));
+
+				//if piece has changed, kill movePicker thread (if one exists) and create new one.
+				//Also, set new values for piece
+				if(currentPiece.hasChanged(orientation, piece, number, row, col)) {
+					//if movePicker thread exists, kill it
+
+					//create new movePicker thread
+
+					//set new values for piece
+					currentPiece.setPiece(orientation, piece, number, row, col);
+				}
+			}
+			//else if comm type is GameEnd, kill movePicker thread (if one exists)
+			else if(pubSubCommType.equals("GameEnd")) {
+				//if movePicker thread exists, kill it
+
+				continue;
+			}
+			//else if comm type is MatchEnd, kill movePicker thread (if one exists) and set matchEnded to true;
+			else if(pubSubCommType.equals("MatchEnd")) {
+				System.out.println("Match Ended! Status: " + pubSubMessageMap.get("status"));
+
+				//if movePicker thread exists, kill it
+
+				matchEnded = true;
+
+				continue;
+			}
+			//else, restart loop (there was probably some error in message)
+			else {
+				continue;
+			}
 		      
 		      
 		      if(i == 10) {

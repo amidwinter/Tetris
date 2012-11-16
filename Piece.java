@@ -10,7 +10,7 @@ public class Piece {
 	
 	public Piece() {
 		orientation = 0;
-		piece = ' ';
+		piece = " ";
 		number = 0;
 		row = 0;
 		col = 0;
