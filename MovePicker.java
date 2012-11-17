@@ -198,13 +198,13 @@ public class MovePicker extends Thread{
 		}
 		String moveString = "down";
 		int currentPieceCol = currentPiece.getCol();
-		if(moves[1][bestMove] + getOrigin(currentPiece) < currentPieceCol)
+		if(moves[1][bestMove] + getOrigin(currentPiece)[1] < currentPieceCol)
 			//move is left of piece
 			moveString = "left";
-		else if(moves[1][bestMove] + getOrigin(currentPiece)  > currentPieceCol)
+		else if(moves[1][bestMove] + getOrigin(currentPiece)[1]  > currentPieceCol)
 			//move is right of piece
 			moveString = "right";
-		else if(moves[1][bestMove] + getOrigin(currentPiece) == currentPieceCol)
+		else if(moves[1][bestMove] + getOrigin(currentPiece)[1] == currentPieceCol)
 			moveString = "drop";
 		
 		return moveString;
