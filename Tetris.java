@@ -100,6 +100,7 @@ public class Tetris {
 					
 					//create new movePicker thread
 					movePicker = new MovePicker(clientToken, reqRespSocket, currentBoard, currentPiece);
+					movePicker.run();
 //				}
 			}
 			//else if comm type is GamePieceState, set new values for piece state and check if changes have happened
@@ -123,6 +124,7 @@ public class Tetris {
 					
 					//create new movePicker thread
 					movePicker = new MovePicker(clientToken, reqRespSocket, currentBoard, currentPiece);
+					movePicker.run();
 //				}
 			}
 			//else if comm type is GameEnd, kill movePicker thread (if one exists)
@@ -149,22 +151,6 @@ public class Tetris {
 			else {
 				continue;
 			}
-		      
-		      
-		      if(i == 10) {
-			      try{
-			    	  i=0;
-				      String moveString = "{ \"comm_type\" : \"GameMove\", \"client_token\" : \"" + clientToken + "\", \"move\" : \"rrotate\" }"; 
-				      System.out.println(moveString);
-				      reqRespSocket.send(moveString.getBytes(), 0);
-				      byte[] response = reqRespSocket.recv(0);
-				      System.out.println("response: " + new String(response));
-			      }
-			      catch(org.zeromq.ZMQException e) {
-			    	  System.out.println(e);
-			      }
-		      }
-		      i++;
-		    }
+		}
 	}
 }
