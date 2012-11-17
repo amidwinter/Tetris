@@ -24,16 +24,7 @@ public class MovePicker extends Thread{
 			System.out.println(moveString);
 			reqRespSocket.send(moveString.getBytes(), 0);
 			byte[] response = reqRespSocket.recv(0);
-			System.out.println("response: " + new String(response));
-			
-			int[][] array = boardStateToArray("FFFFFFFFFFFFFFFFFFFCFFFFFFFFFFCFFFFFFFFFFFFFFFc030");
-			
-			for(int i = 0; i < 20; i++) {
-				for(int j = 0; j < 10; j++)
-					System.out.print(": " + array[i][j] + " :");
-				System.out.println();
-			}
-			
+			System.out.println("response: " + new String(response));			
 		}
 		catch(org.zeromq.ZMQException e) {
 			System.out.println(e);
@@ -48,21 +39,21 @@ public class MovePicker extends Thread{
 	 * @parameters boardState - the hexadecimal representation of the board state
 	 * @return a 2D boolean array representation of the board state
 	 */
-	private int[][] boardStateToArray(String boardState) {		
+	private int[][] boardStateToArray(String boardState) {
+		//convert hex to bigInteger
 		BigInteger boardStateIntValue = new BigInteger(boardState, 16);
-		System.out.println("int: " + boardStateIntValue);
+		
+		//convert bigInteger to binary string
 		String boardStateBinaryValue = String.format("%200s", boardStateIntValue.toString(2)).replace(' ', '0');
-//		String boardStateBinaryValue = Integer.toBinaryString(boardStateIntValue);
-		System.out.println("bin: " + boardStateBinaryValue);
+		
+		//convert binary string to binary char array
 		char[] boardStateBinaryValueCharArray = boardStateBinaryValue.toCharArray();
-		System.out.println("char: " + new String(boardStateBinaryValueCharArray));
 		
 		int[][] boardStateArray = new int[20][10];
 		
+		//convert binary char array to 2D array of integer values
 		for(int i = 0; i < 20; i++) {
-			 
 			for(int j = 0; j < 10; j++) {
-				System.out.println("i=" + i + ", j=" + j + ", value=" + boardStateBinaryValueCharArray[i*10 + j]);
 				boardStateArray[i][j] = Character.getNumericValue(boardStateBinaryValueCharArray[i*10 + j]);
 			}
 		}
