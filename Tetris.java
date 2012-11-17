@@ -104,7 +104,7 @@ public class Tetris {
 			}
 			//else if comm type is GamePieceState, set new values for piece state and check if changes have happened
 			else if(pubSubCommType.equals("GamePieceState")) {
-				int orientation = Integer.parseInt(pubSubMessageMap.get("orientation"));
+				int orientation = Integer.parseInt(pubSubMessageMap.get("orient"));
 				String piece = pubSubMessageMap.get("piece");
 				int number = Integer.parseInt(pubSubMessageMap.get("number"));
 				int row = Integer.parseInt(pubSubMessageMap.get("row"));
