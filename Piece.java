@@ -52,9 +52,9 @@ public class Piece {
 	
 	public int[][] getMask()
 	{
-		int[][] pieceMask = new int[3][3];
-		for(int i = 0; i < 3; i++)
-			for(int j = 0; j < 3; j++)
+		int[][] pieceMask = new int[4][4];
+		for(int i = 0; i < 4; i++)
+			for(int j = 0; j < 4; j++)
 				pieceMask[i][j] = 0;
 		
 		if(this.piece.equals("O"))
