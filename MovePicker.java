@@ -173,8 +173,8 @@ public class MovePicker extends Thread{
 		
 		int pieceRow = lowestPieceRow;
 		int pieceCol = lowestPieceCol;
-		int lowestBoardRow = determineLowestAvailableBoardRow(boardState); // (actually the highest board #)
-		int boardRow = lowestBoardRow;
+		
+		
 		int numOrientations = 0;
 		if(currentPiece.getPiece().equals("O"))
 		{
@@ -196,6 +196,11 @@ public class MovePicker extends Thread{
 		int moveIterator = 0;
 		for(int orient = 0; orient < numOrientations; orient++)
 		{
+			Piece tempPiece = currentPiece;
+			tempPiece.setPiece(orient, currentPiece.getPiece(), currentPiece.getNumber(), currentPiece.getRow(), currentPiece.getCol());
+			
+			int lowestBoardRow = determineLowestAvailableBoardRow(boardState, tempPiece); // (actually the highest board #)
+			int boardRow = lowestBoardRow;
 			//iterate board rows FIX THIS LOOP MAX IS WRONG
 			for(int i = boardRow; i > boardRow-1; i--)
 			{
