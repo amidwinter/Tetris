@@ -213,6 +213,104 @@ public class Piece {
 		return pieceMask;
 	}
 	
+	public int getBottomWidth() {
+		if(this.piece.equals("O"))
+		{
+			return 2;
+		}
+		else if(this.piece.equals("I"))
+		{
+			if(this.orientation == 0)
+			{
+				return 4;				
+			}
+			else if(this.orientation == 1)
+			{
+				return 1;
+			}
+		}
+		else if(this.piece.equals("S"))
+		{
+			if(this.orientation == 0)
+			{
+				return 2;
+			}
+			else if(this.orientation == 1)
+			{
+				return 1;
+			}
+		}
+		else if(this.piece.equals("Z"))
+		{
+			if(this.orientation == 0)
+			{
+				return 2;
+			}
+			else if(this.orientation == 1)
+			{
+				return 1;
+			}
+		}
+		else if(this.piece.equals("L"))
+		{
+			if(this.orientation == 0)
+			{
+				return 1;
+			}
+			else if(this.orientation == 1)
+			{
+				return 2;
+			}
+			else if(this.orientation == 2)
+			{
+				return 3;
+			}
+			else if(this.orientation == 3)
+			{
+				return 1;
+			}
+		}
+		else if(this.piece.equals("J"))
+		{
+			if(this.orientation == 0)
+			{
+				return 1;
+			}
+			else if(this.orientation == 1)
+			{
+				return 1;
+			}
+			else if(this.orientation == 2)
+			{
+				return 3;
+			}
+			else if(this.orientation == 3)
+			{
+				return 2;		
+			}
+		}
+		else if(this.piece.equals("T"))
+		{
+			if(this.orientation == 0)
+			{
+				return 1;
+			}
+			else if(this.orientation == 1)
+			{
+				return 1;
+			}
+			else if(this.orientation == 2)
+			{
+				return 3;
+			}
+			else if(this.orientation == 3)
+			{
+				return 1;
+			}
+		}
+		return 0;
+	}
+	
 	public void setPiece(int orientation, String piece, int number, int row, int col) {
 		this.orientation = orientation;
 		this.piece = piece;
