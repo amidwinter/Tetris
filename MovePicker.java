@@ -154,7 +154,7 @@ public class MovePicker extends Thread{
 		String move = "drop";
 		
 		int[][] moves = determineLowestAvailableMoves(boardState, currentPiece);
-		int[] moveScores = new int[100];
+		double[] moveScores = new double[100];
 		double[][] weightedBoard = getWeightedBoard(boardState);
 		
 		int[][] pieceDeltas = getPieceCellDeltas(currentPiece);
@@ -183,8 +183,8 @@ public class MovePicker extends Thread{
 		double bestScore = 0;
 		int bestMove = 0;
 		for(int i = 0; i < moves.length; i++) {
-			if(moves[0][i] == null || moves[1][i] == null || moveScores[i] == null)
-				break;
+			//if(moves[0][i] == null || moves[1][i] == null || moveScores[i] == null)
+			//	break;
 			if(moveScores[i] > bestScore) {
 				bestScore = moveScores[i];
 				bestMove = i;
