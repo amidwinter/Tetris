@@ -157,6 +157,10 @@ public class MovePicker extends Thread{
 		int[] moveScores = new int[100];
 		double[][] weightedBoard = getWeightedBoard(boardState);
 		
+		int[][] pieceDeltas = getPieceCellDeltas();
+		int[] pieceDeltasRow = pieceDeltas[0];
+		int[] pieceDeltasCol = pieceDeltas[1];
+		
 		for(int i = 0; i < moves.length; i++) {
 			//if(moves[0][i] == null || moves[1][i] == null) 
 			//	break;
