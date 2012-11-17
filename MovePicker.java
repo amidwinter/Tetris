@@ -25,7 +25,7 @@ public class MovePicker extends Thread{
 			byte[] response = reqRespSocket.recv(0);
 			System.out.println("response: " + new String(response));
 			
-			boolean[][] array = boardStateToArray("0000000000000000000000000000000000000000000000c030");
+			int[][] array = boardStateToArray("0000000000000000000000000000000000000000000000c030");
 			
 			for(int i = 0; i < 20; i++) {
 				for(int j = 0; j < 10; j++)
@@ -47,22 +47,20 @@ public class MovePicker extends Thread{
 	 * @parameters boardState - the hexadecimal representation of the board state
 	 * @return a 2D boolean array representation of the board state
 	 */
-	private boolean[][] boardStateToArray(String boardState) {
-		int boardStateIntValue = Integer.parseInt(boardState, 16);
+	private int[][] boardStateToArray(String boardState) {		
+		long boardStateIntValue = Integer.parseInt(boardState, 16);
 		System.out.println("int: " + boardStateIntValue);
-		String boardStateBinaryValue = Integer.toBinaryString(boardStateIntValue);
+		String boardStateBinaryValue = String.format("%200s", Integer.toBinaryString(1)).replace(' ', '0');
+//		String boardStateBinaryValue = Integer.toBinaryString(boardStateIntValue);
 		System.out.println("bin: " + boardStateBinaryValue);
 		char[] boardStateBinaryValueCharArray = boardStateBinaryValue.toCharArray();
 		System.out.println("char: " + new String(boardStateBinaryValueCharArray));
 		
-		boolean[][] boardStateArray = new boolean[20][10];
+		int[][] boardStateArray = new int[20][10];
 		
 		for(int i = 0; i < 20; i++) {
 			for(int j = 0; j < 10; j++) {
-				if(boardStateBinaryValueCharArray[i + j] == '1') 
-					boardStateArray[i][j] = true;
-				else if(boardStateBinaryValueCharArray[i + j] == '0')
-					boardStateArray[i][j] = false;
+				boardStateArray[i][j] = Character.getNumericValue(boardStateBinaryValueCharArray[i + j]);
 			}
 		}
 		
