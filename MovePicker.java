@@ -43,7 +43,7 @@ public class MovePicker extends Thread{
 				System.out.println("\n\nRUNNING\n\n");
 				String boardStateString = currentBoard.getBoardState();
 				int[][] boardStateArray = boardStateToArray(boardStateString);
-				String move = determineMoveBasic(boardStateArray);
+				String move = determineMoveWeighted(boardStateArray);
 				String moveString = "{ \"comm_type\" : \"GameMove\", \"client_token\" : \"" + clientToken + "\", \"move\" : \"" + move + "\" }"; 
 				System.out.println(moveString);
 				reqRespSocket.send(moveString.getBytes(), 0);
