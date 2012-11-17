@@ -150,6 +150,55 @@ public class MovePicker extends Thread{
 		return move;
 	}
 	
+	public String determineMoveWeightedNew(int[][] boardState) {
+		String move = "drop";
+		
+		int[][] moves = determineLowestAvailableMoves(boardState, currentPiece);
+		int[] moveScores = int[100];
+		int[][] weightedBoard = getWeightedBoard(boardState);
+		
+		for(int i = 0; i < moves.length; i++) {
+			if(moves[0][i] == null || moves[1][i] == null) 
+				break;
+			else {
+				for(int j = 0; j < 3; j++) {
+					int pieceOnBoardRow = row + pieceDeltasRow[j];
+					int pieceOnBoardCol = col + pieceDeltasCol[j];
+					
+					if(pieceOnBoardRow < 0 || pieceOnBoardRow > 19 || pieceOnBoardCol < 0 || pieceOnBoardCol > 9) {
+						break;
+					}
+					else {
+						int pieceOnBoard = boardState[pieceOnBoardRow][pieceOnBoardCol];
+						int moveScores[i] = weightedBoard[pieceOnBoardRow][pieceOnBoardCol];
+					}
+				}
+			}
+		}
+		
+		int bestScore = 0;
+		int bestMove = 0;
+		for(int i = 0; i < moves.length; i++) {
+			if(moves[0][i] == null || moves[1][i] == null || moveScores[i] == null)
+				break;
+			if(moveScores[i] > bestScore) {
+				bestScore = moveScores[i];
+				bestMove = i;
+			}
+		}
+		String moveString = "down";
+		currentPieceCol = currentPiece.getCol();
+		if(moves[1][bestMove] < currentPieceCol)
+			//move is left of piece
+			moveString = "left";
+		else if(moves[1][bestMove] > currentPieceCol)
+			//move is right of piece
+			moveString = "right";
+		else if(moves[1][bestMove] == currentPieceCol)
+			moveString = "drop";
+		
+		return moveString;
+	}
 	
 	public String determineMoveWeighted(int[][]boardState)
 	{
@@ -850,9 +899,10 @@ public class MovePicker extends Thread{
 			return false;
 	}
 	
-	public int determineLowestAvailableBoardRow(int[][] boardState, Piece piece)
+	public int[][] determineLowestAvailableMoves(int[][] boardState, Piece piece)
 	{
-		int lowestRow = 19;
+		int[][] moves = new int[2][100];
+		int movesIndex = 0;
 		// Start at bottom(highest #) row, check if there are empty cells
 		
 		int[][] pieceCellDeltas = getPieceCellDeltas(piece);
@@ -883,9 +933,9 @@ public class MovePicker extends Thread{
 					}
 					if(i == 3) {
 						//if it gets here, it means that this is the lowest available row
-						foundLowestRow = true;
-						lowestRow = row;
-						break;
+						moves[0][movesIndex] = row;
+						moves[1][movesIndex] = col;
+						movesIndex++;
 					}
 				}
 			}
@@ -896,7 +946,126 @@ public class MovePicker extends Thread{
 		//This method should take into account the spacing for the bottom row in relation to current piece + its orientation
 			//Only return a lowest row that is a possible fit for the current piece
 		
-		return lowestRow;
+		return moves;
+	}
+	
+	private int[][] getOrigin(Piece piece) {
+		int[] origin = new int[2];
+		if(piece.getPiece().equals("O"))
+		{
+			origin[0] = -1;
+			origin[1] = 1;
+		}
+		else if(piece.getPiece().equals("I"))
+		{
+			if(piece.getOrientation() == 0)
+			{			
+				origin[0] = 0;
+				origin[1] = 2;
+			}
+			else if(piece.getOrientation() == 1)
+			{
+				origin[0] = -2;
+				origin[1] = 0;
+			}
+		}
+		else if(piece.getPiece().equals("S"))
+		{
+			if(piece.getOrientation()== 0)
+			{
+				origin[0] = -1;
+				origin[1] = 1;
+			}
+			else if(piece.getOrientation() == 1)
+			{
+				origin[0] = -1;
+				origin[1] = -1;
+			}
+		}
+		else if(piece.getPiece().equals("Z"))
+		{
+			if(piece.getOrientation() == 0)
+			{
+				origin[0] = 0;
+				origin[1] = 1;
+			}
+			else if(piece.getOrientation() == 1)
+			{
+				origin[0] = -1;
+				origin[1] = 1;
+			}
+		}
+		else if(piece.getPiece().equals("L"))
+		{
+			if(piece.getOrientation() == 0)
+			{
+				origin[0] = -1;
+				origin[1] = 1;
+			}
+			else if(piece.getOrientation() == 1)
+			{
+				origin[0] = -1;
+				origin[1] = 0;
+			}
+			else if(piece.getOrientation() == 2)
+			{
+				origin[0] = 0;
+				origin[1] = 1;
+			}
+			else if(piece.getOrientation() == 3)
+			{
+				origin[0] = -1;
+				origin[1] = 0;
+			}
+		}
+		else if(piece.getPiece().equals("J"))
+		{
+			if(piece.getOrientation() == 0)
+			{
+				origin[0] = -1;
+				origin[1] = -1;
+			}
+			else if(piece.getOrientation() == 1)
+			{
+				origin[0] = -1;
+				origin[1] = 0;
+			}
+			else if(piece.getOrientation() == 2)
+			{
+				origin[0] = 0;
+				origin[1] = 1;
+			}
+			else if(piece.getOrientation() == 3)
+			{
+				origin[0] = -1;
+				origin[1] = 1;
+			}
+		}
+		else if(piece.getPiece().equals("T"))
+		{
+			if(piece.getOrientation() == 0)
+			{
+				origin[0] = -1;
+				origin[1] = 0;
+			}
+			else if(piece.getOrientation() == 1)
+			{
+				origin[0] = -1;
+				origin[1] = 0;
+			}
+			else if(piece.getOrientation() == 2)
+			{
+				origin[0] = 0;
+				origin[1] = 1;
+			}
+			else if(piece.getOrientation() == 3)
+			{
+				origin[0] = -1;
+				origin[1] = 0;
+			}
+		}
+		
+		return origin;
 	}
 	
 	private int[][] getPieceCellDeltas(Piece piece) {
@@ -1017,12 +1186,12 @@ public class MovePicker extends Thread{
 		{
 			if(piece.getOrientation() == 0)
 			{
-				pieceCellDeltasRow[0] = 0;
-				pieceCellDeltasCol[0] = 1;
-				pieceCellDeltasRow[1] = 0;
-				pieceCellDeltasCol[1] = 2;
-				pieceCellDeltasRow[2] = 1;
-				pieceCellDeltasCol[2] = 2;
+				pieceCellDeltasRow[0] = -1;
+				pieceCellDeltasCol[0] = -2;
+				pieceCellDeltasRow[1] = -1;
+				pieceCellDeltasCol[1] = -1;
+				pieceCellDeltasRow[2] = -1;
+				pieceCellDeltasCol[2] = 0;
 			}
 			else if(piece.getOrientation() == 1)
 			{
@@ -1056,11 +1225,11 @@ public class MovePicker extends Thread{
 		{
 			if(piece.getOrientation() == 0)
 			{
-				pieceCellDeltasRow[0] = 0;
-				pieceCellDeltasCol[0] = 1;
-				pieceCellDeltasRow[1] = 0;
-				pieceCellDeltasCol[1] = 2;
-				pieceCellDeltasRow[2] = 1;
+				pieceCellDeltasRow[0] = -1;
+				pieceCellDeltasCol[0] = -1;
+				pieceCellDeltasRow[1] = -1;
+				pieceCellDeltasCol[1] = 0;
+				pieceCellDeltasRow[2] = -1;
 				pieceCellDeltasCol[2] = 1;
 			}
 			else if(piece.getOrientation() == 1)
@@ -1084,11 +1253,11 @@ public class MovePicker extends Thread{
 			else if(piece.getOrientation() == 3)
 			{
 				pieceCellDeltasRow[0] = -1;
-				pieceCellDeltasCol[0] = 1;
-				pieceCellDeltasRow[1] = 0;
-				pieceCellDeltasCol[1] = 1;
-				pieceCellDeltasRow[2] = 1;
-				pieceCellDeltasCol[2] = 1;
+				pieceCellDeltasCol[0] = -1;
+				pieceCellDeltasRow[1] = -1;
+				pieceCellDeltasCol[1] = 0;
+				pieceCellDeltasRow[2] = -2;
+				pieceCellDeltasCol[2] = 0;
 			}
 		}
 		
