@@ -212,7 +212,182 @@ public class MovePicker extends Thread{
 	public double[][] getWeightedBoard(int[][] boardState)
 	{
 		double [][] weightedBoard = new double[20][10];
-		return weightedBoard;
+		double wallWeight = 1;
+		double holeWeight = -1;
+		double bordersBlockWeight = 1;
+		double potentialHoleWeight = 1;
+		double wouldCreateHoleWeight = -1;
+		double heightWeight = 0.25;
+		
+		for(int row = 19; row >= 0; row--) {
+			for(int col = 0; col < 10; col++) {
+				double totalWeight = 0;
+				
+				//if it borders a wall
+				if(bordersWall(col)) {
+					totalWeight += wallWeight;
+				}
+				
+				int isHoleOrPotentialHole = isHoleOrPotentialHole(row, col, boardState);
+				
+				//if is hole
+				if(isHoleOrPotentialHole == 1) {
+					totalWeight += holeWeight;
+				}
+				//if is potential hole
+				else if(isHoleOrPotentialHole == 2) {
+					totalWeight += potentialHoleWeight;
+				}
+				//else if borders block
+				else if(bordersBlock(row, col, boardState)) {
+					totalWeight += bordersBlockWeight;
+				}
+				
+				//if filling it would create a hole
+				if(row < 19) //can't create hole if it is in the bottom row
+					if(wouldCreateHole(row, col, boardState))
+						totalWeight += wouldCreateHoleWeight;
+				
+				//calculate height weight
+				double cellHeightWeight = (row - 10) * heightWeight;
+				totalWeight += cellHeightWeight;
+				
+				weightedBoard[row][col] = totalWeight;
+			}
+		}
+	}
+	
+	/*
+	 * Determines if a cell borders a wall
+	 * @returns true if yes, false if not
+	 */
+	private boolean bordersWall(int col) {
+		if(col == 0 || col == 9) {
+			return true;
+		}
+		else
+			return false;
+	}
+	
+	private boolean bordersBlock(int row, int col, int[][] boardState) {
+		boolean cellRightFilled = false;
+		boolean cellLeftFilled = false;
+		
+		//left
+		if(col > 0) {
+			int cellLeftRow = row;
+			int cellLeftCol = col - 1;
+			int cellLeft = boardState[cellLeftRow][cellLeftCol];
+			if(cellLeft == 1) 
+				cellLeftFilled = true;
+		}
+		
+		//right
+		if(col < 9) {
+			int cellRightRow = row;
+			int cellRightCol = col + 1;
+			int cellRight = boardState[cellRightRow][cellRightCol];
+			if(cellRight == 1)
+				cellRightFilled = true;
+		}
+		
+		if(cellLeftFilled || cellRightFilled)
+			return true;
+		else
+			return false;
+		
+	}
+	
+	/*
+	 * determines if a cell is a hole, or will potentially become a hole
+	 * 
+	 * @returns 0 if not hole or potential hole, 1 if hole, 2 if potential hole (both sides filled, but not above
+	 */
+	private int isHoleOrPotentialHole(int row, int col, int[][] boardState) {
+		boolean aboveFilled = false;
+		boolean leftFilled = false;
+		boolean rightFilled = false;
+		
+		//above
+		if(row != 0) {
+			int cellAboveRow = row - 1;
+			int cellAboveCol = col;
+			int cellAbove = boardState[cellAboveRow][cellAboveCol];
+			if(cellAbove == 1)
+				aboveFilled = true;
+		}
+		else
+			aboveFilled = true;
+		
+		//left
+		if(col != 0) {
+			int cellLeftRow = row;
+			int cellLeftCol = col - 1;
+			int cellLeft = boardState[cellLeftRow][cellLeftCol];
+			if(cellLeft == 1)
+				leftFilled = true;
+		}
+		else
+			leftFilled = true;
+		
+		//right
+		if(col != 9) {
+			int cellRightRow = row;
+			int cellRightCol = col + 1;
+			int cellRight = boardState[cellRightRow][cellRightCol];
+			if(cellRight == 1)
+				rightFilled = true;
+		}
+		else
+			rightFilled = true;
+		
+		if(aboveFilled && leftFilled && rightFilled)
+			return 1;
+		else if(!aboveFilled && leftFilled && rightFilled)
+			return 2;
+		else
+			return 0;
+	}
+	
+	/*
+	 * determines if filling the selected cell would create a hole
+	 * @returns true if yes, false if no.
+	 */
+	private boolean wouldCreateHole(int row, int col, int[][] boardState) {
+		boolean rightFilled = false;
+		boolean leftFilled = false;
+		
+		int cellBelowRow = row + 1;
+		int cellBelowCol = col;
+		
+		//cell to the right of cell below
+		if(cellBelowCol < 9) {
+			int cellBelowRightCol = cellBelowCol + 1;
+			int cellBelowRightRow = cellBelowRow;
+			int cellBelowRight = boardState[cellBelowRightRow][cellBelowRightCol];
+			if(cellBelowRight == 1) {
+				rightFilled = true;
+			}
+		}
+		else 
+			rightFilled = true;
+		
+		//cell to the left of cell below
+		if(cellBelowCol > 0) {
+			int cellBelowLeftCol = cellBelowCol - 1;
+			int cellBelowLeftRow = cellBelowRow;
+			int cellBelowLeft = boardState[cellBelowLeftRow][cellBelowLeftCol];
+			if(cellBelowLeft == 1) {
+				leftFilled = true;
+			}
+		}
+		else 
+			leftFilled = true;
+		
+		if(rightFilled && leftFilled)
+			return true;
+		else
+			return false;
 	}
 	
 	public int determineLowestAvailableBoardRow(int[][] boardState)
