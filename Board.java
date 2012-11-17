@@ -7,7 +7,7 @@ public class Board {
 	private String clearedRows;
 	
 	public Board() {
-		boardState = 0;
+		boardState = "";
 		pieceNumber = 0;
 		clearedRows = null;
 	}
