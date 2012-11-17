@@ -148,11 +148,16 @@ public class Parser
 		{
 			GamePieceState GPS = gson.fromJson(JSON, GamePieceState.class);
 			fields = Team70.class.getDeclaredFields();
-			Map<String, String> map1 = convertToMap(fields, GPS.states.Team70);
-			fields = GamePieceState.class.getDeclaredFields();
-			Map<String, String> map2 = convertToMap(fields, GPS);
-			msg.putAll(map1);
-			msg.putAll(map2);
+			if(GPS.states.Team70 == null)
+				success = false;
+			else
+			{
+				Map<String, String> map1 = convertToMap(fields, GPS.states.Team70);
+				fields = GamePieceState.class.getDeclaredFields();
+				Map<String, String> map2 = convertToMap(fields, GPS);
+				msg.putAll(map1);
+				msg.putAll(map2);
+			}
 		}
 		else if(commType.equals("GameEnd"))
 		{
