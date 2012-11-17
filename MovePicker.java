@@ -20,7 +20,9 @@ public class MovePicker extends Thread{
 	 */
 	public void run() {
 		try{
+
 			if(currentBoard.isSet() && currentPiece.isSet()) {
+				System.out.println("\n\nRUNNING\n\n");
 				String boardStateString = currentBoard.getBoardState();
 				int[][] boardStateArray = boardStateToArray(boardStateString);
 				String move = determineMoveBasic(boardStateArray);
