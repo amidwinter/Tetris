@@ -2,7 +2,7 @@
  * Stores information about the board (supplied by pubSub connection)
  */
 public class Board {
-	private int boardState;
+	private String boardState;
 	private int pieceNumber;
 	private String clearedRows;
 	
@@ -12,7 +12,7 @@ public class Board {
 		clearedRows = null;
 	}
 	
-	public Board(int boardState, int pieceNumber, String clearedRows) {
+	public Board(String boardState, int pieceNumber, String clearedRows) {
 		this.boardState = boardState;
 		this.pieceNumber = pieceNumber;
 		this.clearedRows = clearedRows;
@@ -24,8 +24,8 @@ public class Board {
 	 * 	@returns True, if board state or pieceNumber have changed
 	 * 	@returns False, if board state and pieceNumber have not changed
 	 */
-	public boolean hasChanged(int boardState, int pieceNumber) {
-		if(boardState != this.boardState)
+	public boolean hasChanged(String boardState, int pieceNumber) {
+		if(!boardState.equals(this.boardState))
 			return true;
 		else if(pieceNumber != this.pieceNumber) 
 			return true;
@@ -34,7 +34,7 @@ public class Board {
 	}
 	
 	// Sets the board data to data specified by the parameters
-	public void setBoard(int boardState, int pieceNumber, String clearedRows) {
+	public void setBoard(String boardState, int pieceNumber, String clearedRows) {
 		this.boardState = boardState;
 		this.pieceNumber = pieceNumber;
 		this.clearedRows = clearedRows;
