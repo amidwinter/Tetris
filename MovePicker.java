@@ -73,8 +73,8 @@ public class MovePicker extends Thread{
 				if(cell == 0) {
 					int[][] currentPieceMask = currentPiece.getMask();
 					boolean continueCheckingMask = true;
-					int maskY;
-					int maskX;
+					int maskY = 0;
+					int maskX = 0;
 					for(maskY = 0; maskY < 4 && continueCheckingMask; maskY++) {
 						for(maskX = 0; maskX < 4 && continueCheckingMask; maskX++) {
 							int maskCell = currentPieceMask[maskY][maskX];
