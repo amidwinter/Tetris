@@ -659,11 +659,12 @@ public class MovePicker extends Thread{
 	{
 		double [][] weightedBoard = new double[20][10];
 		double wallWeight = 1;
-		double holeWeight = -1;
-		double bordersBlockWeight = 1;
+		double holeWeight = -25;
+		double bordersBlockWeight = 2;
 		double potentialHoleWeight = 1;
-		double wouldCreateHoleWeight = -1;
-		double heightWeight = 0.25;
+		double wouldCreateHoleWeight = -5;
+		double heightWeight = 1;
+		double floorWeight = 3;
 		
 		for(int row = 19; row >= 0; row--) {
 			for(int col = 0; col < 10; col++) {
@@ -687,6 +688,10 @@ public class MovePicker extends Thread{
 				//else if borders block
 				else if(bordersBlock(row, col, boardState)) {
 					totalWeight += bordersBlockWeight;
+				}
+				
+				if(bordersFloor(col)) {
+					totalWeight += floorWeight;
 				}
 				
 				//if filling it would create a hole
@@ -713,6 +718,13 @@ public class MovePicker extends Thread{
 			return true;
 		}
 		else
+			return false;
+	}
+	
+	private boolean bordersFloor(int row) {
+		if(row == 19)
+			return true;
+		else 
 			return false;
 	}
 	
