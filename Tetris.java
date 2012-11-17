@@ -90,6 +90,10 @@ public class Tetris {
 				String boardState = pubSubMessageMap.get("board_state");
 				int pieceNumber = Integer.parseInt(pubSubMessageMap.get("piece_number"));
 				String clearedRows = pubSubMessageMap.get("cleared_rows");
+				
+				if(!currentBoard.isSet()) {
+					currentBoard = new Board(boardState, pieceNumber, clearedRows);
+				}
 
 				//if game board has changed, kill movePicker thread (if one exists) and create a new one. 
 				//Also, set new values for board
@@ -115,6 +119,10 @@ public class Tetris {
 				int row = Integer.parseInt(pubSubMessageMap.get("row"));
 				int col = Integer.parseInt(pubSubMessageMap.get("col"));
 
+				if(!currentPiece.isSet()) {
+					currentPiece = new Piece(orientation, piece, number, row, col);
+				}
+				
 				//if piece has changed, kill movePicker thread (if one exists) and create new one.
 				//Also, set new values for piece
 				if(currentPiece.hasChanged(orientation, piece, number, row, col)) {
