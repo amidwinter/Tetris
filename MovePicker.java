@@ -208,6 +208,8 @@ public class MovePicker extends Thread{
 				{
 					if(currentPiece.getPiece().equals("O"))
 					{
+						if(k > 8)
+							continue;
 						if((boardState[boardRow][k] == 0) && (boardState[boardRow - 1][k] == 0) && (boardState[boardRow - 1][k + 1] == 0) && (boardState[boardRow][k + 1] == 0))
 						{
 							boolean goodMove = checkLegality(boardRow, k, boardState) && checkLegality(boardRow-1, k, boardState) && checkLegality(boardRow-1, k+1, boardState) && checkLegality(boardRow, k+1, boardState);
@@ -225,6 +227,8 @@ public class MovePicker extends Thread{
 					}
 					else if(currentPiece.getPiece().equals("I"))
 					{
+						if(k > 6)
+							continue;
 						if(orient == 0)
 						{
 							if((boardState[boardRow][k] == 0) && (boardState[boardRow][k+1] == 0) && (boardState[boardRow][k+2] == 0)  && (boardState[boardRow][k+3] == 0) )
@@ -264,6 +268,8 @@ public class MovePicker extends Thread{
 					{
 						if(orient == 0)
 						{
+							if(k > 7)
+								continue;
 							if((boardState[boardRow][k] == 0) && (boardState[boardRow][k+1] == 0) && (boardState[boardRow-1][k+1] == 0)  && (boardState[boardRow-1][k+2] == 0) )
 							{
 								boolean goodMove = checkLegality(boardRow, k, boardState) && checkLegality(boardRow, k+1, boardState) && checkLegality(boardRow-1, k+1, boardState) && checkLegality(boardRow-1, k+2, boardState);
@@ -281,6 +287,8 @@ public class MovePicker extends Thread{
 						}
 						else if(orient == 1)
 						{
+							if(k > 1)
+								continue;
 							if((boardState[boardRow][k] == 0) && (boardState[boardRow-1][k] == 0) && (boardState[boardRow-1][k-1] == 0)  && (boardState[boardRow-2][k-1] == 0) )
 							{
 								boolean goodMove = checkLegality(boardRow, k, boardState) && checkLegality(boardRow-1, k, boardState) && checkLegality(boardRow-1, k-1, boardState) && checkLegality(boardRow-2, k-1, boardState);
@@ -301,6 +309,8 @@ public class MovePicker extends Thread{
 					{
 						if(orient == 0)
 						{
+							if(k < 1 || k > 8)
+								continue;
 							if((boardState[boardRow][k] == 0) && (boardState[boardRow][k+1] == 0) && (boardState[boardRow-1][k] == 0)  && (boardState[boardRow-1][k-1] == 0) )
 							{
 								boolean goodMove = checkLegality(boardRow, k, boardState) && checkLegality(boardRow, k+1, boardState) && checkLegality(boardRow-1, k, boardState) && checkLegality(boardRow-1, k-1, boardState);
@@ -318,6 +328,8 @@ public class MovePicker extends Thread{
 						}
 						else if(orient == 1)
 						{
+							if(k > 8)
+								continue;
 							if((boardState[boardRow][k] == 0) && (boardState[boardRow-1][k] == 0) && (boardState[boardRow-1][k+1] == 0)  && (boardState[boardRow-2][k+1] == 0) )
 							{
 								boolean goodMove = checkLegality(boardRow, k, boardState) && checkLegality(boardRow-1, k, boardState) && checkLegality(boardRow-1, k+1, boardState) && checkLegality(boardRow-2, k+1, boardState);
@@ -338,6 +350,8 @@ public class MovePicker extends Thread{
 					{
 						if(orient == 0)
 						{
+							if(k > 7)
+								continue;
 							if((boardState[boardRow][k] == 0) && (boardState[boardRow-1][k] == 0) && (boardState[boardRow-1][k+1] == 0)  && (boardState[boardRow-1][k+2] == 0) )
 							{
 								boolean goodMove = checkLegality(boardRow, k, boardState) && checkLegality(boardRow-1, k, boardState) && checkLegality(boardRow-1, k+1, boardState) && checkLegality(boardRow-1, k+2, boardState);
@@ -355,6 +369,8 @@ public class MovePicker extends Thread{
 						}
 						else if(orient == 1)
 						{
+							if(k > 8)
+								continue;
 							if((boardState[boardRow][k] == 0) && (boardState[boardRow][k+1] == 0) && (boardState[boardRow-1][k] == 0)  && (boardState[boardRow-2][k] == 0) )
 							{
 								boolean goodMove = checkLegality(boardRow, k, boardState) && checkLegality(boardRow, k+1, boardState) && checkLegality(boardRow-1, k, boardState) && checkLegality(boardRow-2, k, boardState);
@@ -372,6 +388,8 @@ public class MovePicker extends Thread{
 						}
 						if(orient == 2)
 						{
+							if(k > 7)
+								continue;
 							if((boardState[boardRow][k] == 0) && (boardState[boardRow][k+1] == 0) && (boardState[boardRow][k+2] == 0)  && (boardState[boardRow-1][k+2] == 0) )
 							{
 								boolean goodMove = checkLegality(boardRow, k, boardState) && checkLegality(boardRow, k+1, boardState) && checkLegality(boardRow, k+2, boardState) && checkLegality(boardRow-1, k+2, boardState);
@@ -389,6 +407,8 @@ public class MovePicker extends Thread{
 						}
 						else if(orient == 3)
 						{
+							if(k > 1)
+								continue;
 							if((boardState[boardRow][k] == 0) && (boardState[boardRow-1][k] == 0) && (boardState[boardRow-2][k] == 0)  && (boardState[boardRow-2][k-1] == 0) )
 							{
 								boolean goodMove = checkLegality(boardRow, k, boardState) && checkLegality(boardRow-1, k, boardState) && checkLegality(boardRow-2, k, boardState) && checkLegality(boardRow-2, k-1, boardState);
@@ -408,8 +428,10 @@ public class MovePicker extends Thread{
 					else if(currentPiece.getPiece().equals("J"))
 					{
 						if(orient == 0)
-						{
-							if((boardState[boardRow][k] == 0) && (boardState[boardRow-1][k] == 0) && (boardState[boardRow-1][k-1] == 0)  && (boardState[boardRow-1][k-2] == 0) )
+						{	
+							if(k < 2)
+								continue;
+							else if((boardState[boardRow][k] == 0) && (boardState[boardRow-1][k] == 0) && (boardState[boardRow-1][k-1] == 0)  && (boardState[boardRow-1][k-2] == 0) )
 							{
 								boolean goodMove = checkLegality(boardRow, k, boardState) && checkLegality(boardRow-1, k, boardState) && checkLegality(boardRow-1, k-1, boardState) && checkLegality(boardRow-1, k-2, boardState);
 								if(goodMove == true)
@@ -426,7 +448,9 @@ public class MovePicker extends Thread{
 						}
 						else if(orient == 1)
 						{
-							if((boardState[boardRow][k] == 0) && (boardState[boardRow-1][k] == 0) && (boardState[boardRow-2][k] == 0)  && (boardState[boardRow-2][k+1] == 0) )
+							if(k > 8 || boardrow )
+								continue;							
+							else if((boardState[boardRow][k] == 0) && (boardState[boardRow-1][k] == 0) && (boardState[boardRow-2][k] == 0)  && (boardState[boardRow-2][k+1] == 0) )
 							{
 								boolean goodMove = checkLegality(boardRow, k, boardState) && checkLegality(boardRow-1, k, boardState) && checkLegality(boardRow-2, k, boardState) && checkLegality(boardRow-2, k+1, boardState);
 								if(goodMove == true)
@@ -443,6 +467,8 @@ public class MovePicker extends Thread{
 						}
 						if(orient == 2)
 						{
+							if(k > 7)
+								continue;
 							if((boardState[boardRow][k] == 0) && (boardState[boardRow][k+1] == 0) && (boardState[boardRow][k+2] == 0)  && (boardState[boardRow-1][k] == 0) )
 							{
 								boolean goodMove = checkLegality(boardRow, k, boardState) && checkLegality(boardRow, k+1, boardState) && checkLegality(boardRow, k+2, boardState) && checkLegality(boardRow-1, k, boardState);
@@ -460,6 +486,8 @@ public class MovePicker extends Thread{
 						}
 						else if(orient == 3)
 						{
+							if(k > 8)
+								continue;
 							if((boardState[boardRow][k] == 0) && (boardState[boardRow][k+1] == 0) && (boardState[boardRow-1][k+1] == 0)  && (boardState[boardRow-2][k+1] == 0) )
 							{
 								boolean goodMove = checkLegality(boardRow, k, boardState) && checkLegality(boardRow, k+1, boardState) && checkLegality(boardRow-1, k+1, boardState) && checkLegality(boardRow-2, k+1, boardState);
@@ -480,6 +508,8 @@ public class MovePicker extends Thread{
 					{
 						if(orient == 0)
 						{
+							if(k > 8 || k < 1)
+								continue;
 							if((boardState[boardRow][k] == 0) && (boardState[boardRow-1][k] == 0) && (boardState[boardRow-1][k+1] == 0)  && (boardState[boardRow-1][k-1] == 0) )
 							{
 								boolean goodMove = checkLegality(boardRow, k, boardState) && checkLegality(boardRow-1, k, boardState) && checkLegality(boardRow-1, k+1, boardState) && checkLegality(boardRow-1, k-1, boardState);
@@ -497,6 +527,8 @@ public class MovePicker extends Thread{
 						}
 						else if(orient == 1)
 						{
+							if(k > 8)
+								continue;
 							if((boardState[boardRow][k] == 0) && (boardState[boardRow-1][k] == 0) && (boardState[boardRow-1][k+1] == 0)  && (boardState[boardRow-2][k] == 0) )
 							{
 								boolean goodMove = checkLegality(boardRow, k, boardState) && checkLegality(boardRow-1, k, boardState) && checkLegality(boardRow-1, k+1, boardState) && checkLegality(boardRow-2, k, boardState);
@@ -514,6 +546,8 @@ public class MovePicker extends Thread{
 						}
 						if(orient == 2)
 						{
+							if(k > 7)
+								continue;
 							if((boardState[boardRow][k] == 0) && (boardState[boardRow][k+1] == 0) && (boardState[boardRow][k+2] == 0)  && (boardState[boardRow-1][k+1] == 0) )
 							{
 								boolean goodMove = checkLegality(boardRow, k, boardState) && checkLegality(boardRow, k+1, boardState) && checkLegality(boardRow, k+2, boardState) && checkLegality(boardRow-1, k+1, boardState);
@@ -531,6 +565,8 @@ public class MovePicker extends Thread{
 						}
 						else if(orient == 3)
 						{
+							if(k < 1)
+								continue;
 							if((boardState[boardRow][k] == 0) && (boardState[boardRow-1][k] == 0) && (boardState[boardRow-1][k-1] == 0)  && (boardState[boardRow-2][k] == 0) )
 							{
 								boolean goodMove = checkLegality(boardRow, k, boardState) && checkLegality(boardRow-1, k, boardState) && checkLegality(boardRow-1, k-1, boardState) && checkLegality(boardRow-2, k, boardState);
