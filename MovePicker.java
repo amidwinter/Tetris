@@ -131,4 +131,128 @@ public class MovePicker extends Thread{
 		}
 		return move;
 	}
+	
+	
+	public String determineMoveWeighted(int[][]boardState)
+	{
+		//default move
+		String move = "drop";
+		//Note: focus on left/right justification initially (left before right)
+			//Remember to check legality of every move
+		int[][] possibleMove = new int[20][10]; 
+		int[][] currentPieceMask = currentPiece.getMask();
+		
+		//Determine weighted board
+		double [][]weightedBoard = getWeightedBoard(boardState);
+		//First, look at bottom available row
+			//TODO: Determine availability: Check if row covered, check holes(not sure if needed yet) - method below should do this
+		int lowestBoardRow = determineLowestAvailableBoardRow(boardState); // (actually the highest board #)
+		
+		//Second, determine what moves can be made on bottom row
+		//Determine first row of pieceMask containing a 1
+		int lowestPieceRow = determineLowestAvailablePieceRow(currentPieceMask);
+		//Determine first column of pieceMask containing a 1
+		int lowestPieceCol = determineLowestAvailablePieceCol(currentPieceMask);
+		
+		int pieceRow = lowestPieceRow;
+		int pieceCol = lowestPieceCol;
+		int boardRow = lowestBoardRow;
+		
+		boolean feasibleMove = false;
+		int i = 0;
+		
+		//Creating an 
+		int []possibleMoves = new int[10];
+		
+		
+		
+		
+		while(i < 10)
+		{
+			if(currentPieceMask[pieceRow][pieceCol] + boardState[boardRow][i] == 1)
+			{
+				//Save the cell this move was made in
+				possibleMove[lowestBoardRow][i] = 1;
+				feasibleMove = true;
+				//check if the piece has a 1 to its right
+				if(currentPieceMask[pieceRow][pieceCol + 1] == 1)
+				{
+					if(currentPieceMask[pieceRow][pieceCol + 1] + boardState[boardRow][i + 1] == 1)
+					{
+						//Save the cell this move was made in
+						possibleMove[lowestBoardRow][i + 1] = 1;
+						//both cells on this row fit...move up a row
+						
+					}
+					else
+					{
+						feasibleMove = false;
+						//There was something in the way. This move will not work
+					}
+				}
+				//If "if" statement not triggered, only 1 cell on this bottom row of piece...move up a row
+				
+			}
+		}
+		
+			//Third, determine what moves (in relation to first move) can be made on second row
+		
+			//Next row (if applicable)
+		
+			//Next row (if applicable)
+		
+		//Whenever a valid move is determined, save it. Give it a score using weightedBoard, then continue until all possible moves are made
+		
+		//Reorient piece, repeat
+		
+		
+		return move;
+	}
+	
+	public double[][] getWeightedBoard(int[][] boardState)
+	{
+		double [][] weightedBoard = new double[20][10];
+		return weightedBoard;
+	}
+	
+	public int determineLowestAvailableBoardRow(int[][] boardState)
+	{
+		int lowestRow = 19;
+		// Start at bottom(highest #) row, check if there are empty cells
+			//if there are empty cells, check if they are blocked above ie check whether it is possible to put something there
+				//TODO: determine criteria for "possible to put something there"
+		
+		//This method should take into account the spacing for the bottom row in relation to current piece + its orientation
+			//Only return a lowest row that is a possible fit for the current piece
+		
+		return lowestRow;
+	}
+	
+	public int determineLowestAvailablePieceRow(int[][] pieceMask)
+	{
+		/*	
+		* 	0 1 2 3
+		*	1   X
+		*	2
+		*	3
+		*
+		*	[row][column] ==> [1][2]
+		*/
+		int lowestRow = 0;
+		
+		return lowestRow;
+	}
+	
+	public int determineLowestAvailablePieceCol(int[][] pieceMask)
+	{
+		/*	
+		* 	0 1 2 3
+		*	1
+		*	2
+		*	3
+		*/
+		int lowestCol = 0;
+		
+		return lowestCol;
+	}
 }
