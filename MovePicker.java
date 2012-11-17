@@ -29,9 +29,6 @@ public class MovePicker extends Thread{
 			System.out.println(e);
 			return;
 		}
-		catch(InterruptedException e) {
-			return;
-		}
 
 	}
 }
