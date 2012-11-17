@@ -48,6 +48,169 @@ public class Piece {
 			return false;
 	}
 	
+	public int[][] getMask()
+	{
+		int[][] pieceMask = new int[3][3];
+		for(int i = 0; i < 3; i++)
+			for(int j = 0; j < 3; j++)
+				pieceMask[i][j] = 0;
+		
+		if(this.piece.equals("O"))
+		{
+			pieceMask[1][1] = 1;
+			pieceMask[1][2] = 1;
+			pieceMask[2][1] = 1;	
+			pieceMask[2][2] = 1;	
+		}
+		else if(this.piece.equals("I"))
+		{
+			if(this.orientation == 0)
+			{
+				pieceMask[1][0] = 1;
+				pieceMask[1][1] = 1;
+				pieceMask[1][2] = 1;
+				pieceMask[1][3] = 1;
+				
+			}
+			else if(this.orientation == 1)
+			{
+				pieceMask[0][2] = 1;
+				pieceMask[1][2] = 1;
+				pieceMask[2][2] = 1;
+				pieceMask[3][2] = 1;
+			}
+		}
+		else if(this.piece.equals("S"))
+		{
+			if(this.orientation == 0)
+			{
+				pieceMask[1][2] = 1;
+				pieceMask[1][3] = 1;
+				pieceMask[2][1] = 1;
+				pieceMask[2][2] = 1;
+			}
+			else if(this.orientation == 1)
+			{
+				pieceMask[0][2] = 1;
+				pieceMask[1][2] = 1;
+				pieceMask[1][3] = 1;
+				pieceMask[2][3] = 1;
+			}
+		}
+		else if(this.piece.equals("Z"))
+		{
+			if(this.orientation == 0)
+			{
+				pieceMask[1][1] = 1;
+				pieceMask[1][2] = 1;
+				pieceMask[2][2] = 1;
+				pieceMask[2][3] = 1;
+			}
+			else if(this.orientation == 1)
+			{
+				pieceMask[0][3] = 1;
+				pieceMask[1][2] = 1;
+				pieceMask[1][3] = 1;
+				pieceMask[2][2] = 1;
+			}
+		}
+		else if(this.piece.equals("L"))
+		{
+			if(this.orientation == 0)
+			{
+				pieceMask[1][1] = 1;
+				pieceMask[1][2] = 1;
+				pieceMask[1][3] = 1;
+				pieceMask[2][3] = 1;
+			}
+			else if(this.orientation == 1)
+			{
+				pieceMask[0][2] = 1;
+				pieceMask[1][2] = 1;
+				pieceMask[2][2] = 1;
+				pieceMask[2][3] = 1;
+			}
+			else if(this.orientation == 2)
+			{
+				pieceMask[0][3] = 1;
+				pieceMask[1][1] = 1;
+				pieceMask[1][2] = 1;
+				pieceMask[1][3] = 1;
+			}
+			else if(this.orientation == 3)
+			{
+				pieceMask[0][1] = 1;
+				pieceMask[0][2] = 1;
+				pieceMask[1][2] = 1;
+				pieceMask[2][2] = 1;
+			}
+		}
+		else if(this.piece.equals("J"))
+		{
+			if(this.orientation == 0)
+			{
+				pieceMask[1][1] = 1;
+				pieceMask[1][2] = 1;
+				pieceMask[1][3] = 1;
+				pieceMask[2][3] = 1;
+			}
+			else if(this.orientation == 1)
+			{
+				pieceMask[0][2] = 1;
+				pieceMask[0][3] = 1;
+				pieceMask[1][2] = 1;
+				pieceMask[2][2] = 1;
+			}
+			else if(this.orientation == 2)
+			{
+				pieceMask[0][1] = 1;
+				pieceMask[1][1] = 1;
+				pieceMask[1][2] = 1;
+				pieceMask[1][3] = 1;
+			}
+			else if(this.orientation == 3)
+			{
+				pieceMask[0][2] = 1;
+				pieceMask[1][2] = 1;
+				pieceMask[2][2] = 1;
+				pieceMask[2][1] = 1;		
+			}
+		}
+		else if(this.piece.equals("T"))
+		{
+			if(this.orientation == 0)
+			{
+				pieceMask[1][1] = 1;
+				pieceMask[1][2] = 1;
+				pieceMask[1][3] = 1;
+				pieceMask[2][2] = 1;
+			}
+			else if(this.orientation == 1)
+			{
+				pieceMask[0][2] = 1;
+				pieceMask[1][2] = 1;
+				pieceMask[1][3] = 1;
+				pieceMask[2][2] = 1;
+			}
+			else if(this.orientation == 2)
+			{
+				pieceMask[0][2] = 1;
+				pieceMask[1][1] = 1;
+				pieceMask[1][2] = 1;
+				pieceMask[1][3] = 1;
+			}
+			else if(this.orientation == 3)
+			{
+				pieceMask[0][2] = 1;
+				pieceMask[1][1] = 1;
+				pieceMask[1][2] = 1;
+				pieceMask[2][2] = 1;
+			}
+		}
+		
+		return pieceMask;
+	}
+	
 	public void setPiece(int orientation, String piece, int number, int row, int col) {
 		this.orientation = orientation;
 		this.piece = piece;
