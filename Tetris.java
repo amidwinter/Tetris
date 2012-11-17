@@ -72,10 +72,9 @@ public class Tetris {
 			System.out.println();
 			// Read envelope with match token, do not do anything
 			String matchTokenMessage = new String(pubSubSocket.recv(0));
-
 			//read envelope with message
-//			String pubSubMessage = new String(pubSubSocket.recv(0));
-//			System.out.println("PubSub: " + pubSubMessage);		      
+			String pubSubMessage = new String(pubSubSocket.recv(0));
+			System.out.println("PubSub: " + pubSubMessage);		      
 //			boolean success = parser.parseMessage(pubSubMessage);
 //			Map <String, String> pubSubMessageMap = parser.getMessage();
 
@@ -147,7 +146,7 @@ public class Tetris {
 
 				continue;
 			}
-			//else, restart loop (there was probably some error in message)
+			//else, restart loop (there was probably some error in pubSub message)
 			else {
 				continue;
 			}
