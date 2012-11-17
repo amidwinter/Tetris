@@ -414,7 +414,7 @@ public class MovePicker extends Thread{
 	
 	public int[][] determineLowestAvailableMoves(int[][] boardState, Piece piece)
 	{
-		int[][] moves = new int[2][100];
+		int[][] moves = new int[2][1000];
 		int movesIndex = 0;
 		// Start at bottom(highest #) row, check if there are empty cells
 		
