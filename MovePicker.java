@@ -155,8 +155,6 @@ public class MovePicker extends Thread{
 	public String determineMoveWeightedNew(int[][] boardState) {
 		String move = "drop";
 		
-		Piece tempPiece = new Piece(
-		
 		int[][] moves = determineLowestAvailableMoves(boardState, currentPiece);
 		double[] moveScores = new double[100];
 		double[][] weightedBoard = getWeightedBoard(boardState);
