@@ -67,9 +67,9 @@ public class MovePicker extends Thread{
 	private String determineMoveBasic(int[][] boardState) {	
 		boolean continueCheckingBoard = true;
 		String move = "drop";
-		for(int boardY = 19; i >=0 && continueCheckingBoard; i--) {
-			for(int boardX = 0; j < 10; j++) {
-				int cell = boardState[i][j];
+		for(int boardY = 19; boardY >=0 && continueCheckingBoard; boardY--) {
+			for(int boardX = 0; boardX < 10; boardX++) {
+				int cell = boardState[boardY][boardX];
 				if(cell == 0) {
 					int[][] currentPieceMask = currentPiece.getMask();
 					boolean continueCheckingMask = true;
