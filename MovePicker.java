@@ -815,7 +815,7 @@ public class MovePicker extends Thread{
 			for(int col = 0; col < 10; col++) {
 				if(boardState[row][col] == 0) {					
 					int i;
-					for(i = 0; i < 4; i++) {
+					for(i = 0; i < 3; i++) {
 						int pieceCellOnBoardRow = row + pieceCellDeltasRow[i];
 						int pieceCellOnBoardCol = col + pieceCellDeltasCol[i];
 						
