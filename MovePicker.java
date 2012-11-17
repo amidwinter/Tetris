@@ -408,7 +408,7 @@ public class MovePicker extends Thread{
 						}
 						else if(orient == 3)
 						{
-							if(k > 1)
+							if(k < 1)
 								continue;
 							if((boardState[boardRow][k] == 0) && (boardState[boardRow-1][k] == 0) && (boardState[boardRow-2][k] == 0)  && (boardState[boardRow-2][k-1] == 0) )
 							{
