@@ -839,7 +839,7 @@ public class MovePicker extends Thread{
 	
 	public int determineLowestAvailableBoardRow(int[][] boardState, Piece piece)
 	{
-		int lowestRow = 10;
+		int lowestRow = 19;
 		// Start at bottom(highest #) row, check if there are empty cells
 		
 		int[][] pieceCellDeltas = getPieceCellDeltas(piece);
@@ -868,7 +868,7 @@ public class MovePicker extends Thread{
 							}
 						}
 					}
-					if(i == 4) {
+					if(i == 3) {
 						//if it gets here, it means that this is the lowest available row
 						foundLowestRow = true;
 						lowestRow = row;
