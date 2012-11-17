@@ -39,4 +39,8 @@ public class Board {
 		this.pieceNumber = pieceNumber;
 		this.clearedRows = clearedRows;
 	}
+	
+	public String getBoardState() {
+		return this.boardState;
+	}
 }
