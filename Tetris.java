@@ -76,6 +76,11 @@ public class Tetris {
 			String pubSubMessage = new String(pubSubSocket.recv(0));
 			System.out.println("PubSub: " + pubSubMessage);		      
 			boolean success = parser.parseMessage(pubSubMessage);
+			
+			if(success == false) {
+				continue;
+			}
+			
 			Map <String, String> pubSubMessageMap = parser.getMessage();
 
 			//if comm type is GameBoardState, set new values for board state and check if changes have happened
