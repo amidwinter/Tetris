@@ -200,6 +200,7 @@ public class MovePicker extends Thread{
 			tempPiece.setPiece(orient, currentPiece.getPiece(), currentPiece.getNumber(), currentPiece.getRow(), currentPiece.getCol());
 			
 			int lowestBoardRow = determineLowestAvailableBoardRow(boardState, tempPiece); // (actually the highest board #)
+			System.out.println("lowest row: " + lowestBoardRow);
 			int boardRow = lowestBoardRow;
 			//iterate board rows FIX THIS LOOP MAX IS WRONG
 			for(int i = boardRow; i > boardRow-1; i--)
@@ -616,10 +617,9 @@ public class MovePicker extends Thread{
 		
 		//Now compare current position to desired position...choose move to do
 			//If orientation is different, change orientation first
-		System.out.println("getOrientation: " + currentPiece.getOrientation());
-		System.out.println("move: " + moves[highestRecord]);
-		System.out.println("move orient: " + moves[highestRecord].orient);
-		if(currentPiece.getOrientation() != moves[highestRecord].orient)
+		if(moves[highestRecord] == null)	//there are no moves, so send default "down" move
+			move = "down";
+		else if(currentPiece.getOrientation() != moves[highestRecord].orient)
 		{
 			move = "lrotate";
 		}
