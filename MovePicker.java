@@ -60,7 +60,9 @@ public class MovePicker extends Thread{
 		int[][] boardStateArray = new int[20][10];
 		
 		for(int i = 0; i < 20; i++) {
+			 
 			for(int j = 0; j < 10; j++) {
+				System.out.println("i=" + i + ", j=" + j);
 				boardStateArray[i][j] = Character.getNumericValue(boardStateBinaryValueCharArray[i + j]);
 			}
 		}
