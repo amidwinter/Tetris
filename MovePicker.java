@@ -191,7 +191,7 @@ public class MovePicker extends Thread{
 			}
 		}
 		String moveString = "down";
-		currentPieceCol = currentPiece.getCol();
+		int currentPieceCol = currentPiece.getCol();
 		if(moves[1][bestMove] < currentPieceCol)
 			//move is left of piece
 			moveString = "left";
