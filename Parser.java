@@ -190,33 +190,27 @@ public class Parser
 				String name = fields[i].getName();
 				if(fields[i].get(o) == null)
 				{
-					System.out.println("null!");
 				}
 				else if(fields[i].get(o).getClass() == states.class)
 				{
-					System.out.println("states!");
 				}
 				else if(fields[i].get(o).getClass() == scores.class)
 				{
-					System.out.println("scores!");
 				}
 				else if(fields[i].get(o).getClass() == int[].class)
 				{
 					int[] valueIntArr = (int[])fields[i].get(o);
 					
 					value = Arrays.toString(valueIntArr);
-					System.out.println("int[]!   " + value);
 				}
 				else if(fields[i].get(o).getClass() == String[].class)
 				{
 					String[] valueStringArr = (String[])fields[i].get(o);
 					value = Arrays.toString(valueStringArr);
-					System.out.println("string[]!   " + value);
 				}
 				else
 				{
 					value = fields[i].get(o).toString();
-					System.out.println("string!   " + value);
 				}
 				
 				tempMap.put(name, value);
