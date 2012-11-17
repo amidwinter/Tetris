@@ -462,7 +462,7 @@ public class MovePicker extends Thread{
 		return moves;
 	}
 	
-	private int[][] getOrigin(Piece piece) {
+	private int[] getOrigin(Piece piece) {
 		int[] origin = new int[2];
 		if(piece.getPiece().equals("O"))
 		{
