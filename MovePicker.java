@@ -390,10 +390,39 @@ public class MovePicker extends Thread{
 			return false;
 	}
 	
-	public int determineLowestAvailableBoardRow(int[][] boardState)
+	public int determineLowestAvailableBoardRow(int[][] boardState, Piece piece)
 	{
 		int lowestRow = 19;
 		// Start at bottom(highest #) row, check if there are empty cells
+		
+		int[][] pieceCellDeltas = getPieceCellDeltas(piece);
+		int[] pieceCellDeltasRow = pieceCellDeltas[0];
+		int[] pieceCellDeltasCol = pieceCellDeltas[1];
+		
+		boolean foundLowestRow = false;
+		
+		for(int row = 19; row >= 0 && !foundLowestRow; row--) {
+			for(int col = 0; col < 10; col++) {
+				if(boardState[row][col] == 0) {					
+					int i;
+					for(i = 0; i < 4; i++) {
+						int pieceCellOnBoardRow = row + pieceCellDeltasRow[i];
+						int pieceCellOnBoardCol = col + pieceCellDeltasCol[i];
+						int pieceCellOnBoard = boardState[pieceCellOnBoardRow][pieceCellOnBoardCol];
+						if(pieceCellOnBoard == 1) {
+							foundLowestRow = false;
+							break;
+						}
+					}
+					if(i == 4) {
+						//if it gets here, it means that this is the lowest available row
+						foundLowestRow = true;
+						lowestRow = row;
+						break;
+					}
+				}
+			}
+		}
 			//if there are empty cells, check if they are blocked above ie check whether it is possible to put something there
 				//TODO: determine criteria for "possible to put something there"
 		
@@ -401,6 +430,206 @@ public class MovePicker extends Thread{
 			//Only return a lowest row that is a possible fit for the current piece
 		
 		return lowestRow;
+	}
+	
+	private int[][] getPieceCellDeltas(Piece piece) {
+		int[] pieceCellDeltasRow = new int[3];	//array of ints that specifies the positions of the filled cells of the piece relative to the bottom-left-most cell
+		int[] pieceCellDeltasCol = new int[3];
+		if(piece.getPiece().equals("O"))
+		{
+			pieceCellDeltasRow[0] = -1;
+			pieceCellDeltasCol[0] = 0;
+			pieceCellDeltasRow[1] = -1;
+			pieceCellDeltasCol[1] = 1;
+			pieceCellDeltasRow[2] = 0;
+			pieceCellDeltasCol[2] = 1;
+		}
+		else if(piece.getPiece().equals("I"))
+		{
+			if(piece.getOrientation() == 0)
+			{
+				pieceCellDeltasRow[0] = 0;
+				pieceCellDeltasCol[0] = 1;
+				pieceCellDeltasRow[1] = 0;
+				pieceCellDeltasCol[1] = 2;
+				pieceCellDeltasRow[2] = 0;
+				pieceCellDeltasCol[2] = 3;				
+			}
+			else if(piece.getOrientation() == 1)
+			{
+				pieceCellDeltasRow[0] = -3;
+				pieceCellDeltasCol[0] = 0;
+				pieceCellDeltasRow[1] = -2;
+				pieceCellDeltasCol[1] = 0;
+				pieceCellDeltasRow[2] = -1;
+				pieceCellDeltasCol[2] = 0;
+			}
+		}
+		else if(piece.getPiece().equals("S"))
+		{
+			if(piece.getOrientation()== 0)
+			{
+				pieceCellDeltasRow[0] = -1;
+				pieceCellDeltasCol[0] = 1;
+				pieceCellDeltasRow[1] = -1;
+				pieceCellDeltasCol[1] = 2;
+				pieceCellDeltasRow[2] = 0;
+				pieceCellDeltasCol[2] = 1;
+			}
+			else if(piece.getOrientation() == 1)
+			{
+				pieceCellDeltasRow[0] = -1;
+				pieceCellDeltasCol[0] = -1;
+				pieceCellDeltasRow[1] = -2;
+				pieceCellDeltasCol[1] = -1;
+				pieceCellDeltasRow[2] = -1;
+				pieceCellDeltasCol[2] = 0;
+			}
+		}
+		else if(piece.getPiece().equals("Z"))
+		{
+			if(piece.getOrientation() == 0)
+			{
+				pieceCellDeltasRow[0] = -1;
+				pieceCellDeltasCol[0] = -1;
+				pieceCellDeltasRow[1] = -1;
+				pieceCellDeltasCol[1] = 0;
+				pieceCellDeltasRow[2] = 0;
+				pieceCellDeltasCol[2] = 1;
+			}
+			else if(piece.getOrientation() == 1)
+			{
+				pieceCellDeltasRow[0] = -1;
+				pieceCellDeltasCol[0] = 0;
+				pieceCellDeltasRow[1] = -1;
+				pieceCellDeltasCol[1] = 1;
+				pieceCellDeltasRow[2] = -2;
+				pieceCellDeltasCol[2] = 1;
+			}
+		}
+		else if(piece.getPiece().equals("L"))
+		{
+			if(piece.getOrientation() == 0)
+			{
+				pieceCellDeltasRow[0] = -1;
+				pieceCellDeltasCol[0] = 0;
+				pieceCellDeltasRow[1] = -1;
+				pieceCellDeltasCol[1] = 1;
+				pieceCellDeltasRow[2] = -1;
+				pieceCellDeltasCol[2] = 2;
+			}
+			else if(piece.getOrientation() == 1)
+			{
+				pieceCellDeltasRow[0] = -1;
+				pieceCellDeltasCol[0] = 0;
+				pieceCellDeltasRow[1] = -2;
+				pieceCellDeltasCol[1] = 0;
+				pieceCellDeltasRow[2] = 0;
+				pieceCellDeltasCol[2] = 1;
+			}
+			else if(piece.getOrientation() == 2)
+			{
+				pieceCellDeltasRow[0] = 0;
+				pieceCellDeltasCol[0] = 1;
+				pieceCellDeltasRow[1] = 0;
+				pieceCellDeltasCol[1] = 2;
+				pieceCellDeltasRow[2] = -1;
+				pieceCellDeltasCol[2] = 2;
+			}
+			else if(piece.getOrientation() == 3)
+			{
+				pieceCellDeltasRow[0] = -2;
+				pieceCellDeltasCol[0] = -1;
+				pieceCellDeltasRow[1] = -2;
+				pieceCellDeltasCol[1] = 0;
+				pieceCellDeltasRow[2] = -1;
+				pieceCellDeltasCol[2] = 0;
+			}
+		}
+		else if(piece.getPiece().equals("J"))
+		{
+			if(piece.getOrientation() == 0)
+			{
+				pieceCellDeltasRow[0] = 0;
+				pieceCellDeltasCol[0] = 1;
+				pieceCellDeltasRow[1] = 0;
+				pieceCellDeltasCol[1] = 2;
+				pieceCellDeltasRow[2] = 1;
+				pieceCellDeltasCol[2] = 2;
+			}
+			else if(piece.getOrientation() == 1)
+			{
+				pieceCellDeltasRow[0] = -1;
+				pieceCellDeltasCol[0] = 0;
+				pieceCellDeltasRow[1] = -2;
+				pieceCellDeltasCol[1] = 0;
+				pieceCellDeltasRow[2] = -2;
+				pieceCellDeltasCol[2] = 1;
+			}
+			else if(piece.getOrientation() == 2)
+			{
+				pieceCellDeltasRow[0] = -1;
+				pieceCellDeltasCol[0] = 0;
+				pieceCellDeltasRow[1] = 0;
+				pieceCellDeltasCol[1] = 1;
+				pieceCellDeltasRow[2] = 0;
+				pieceCellDeltasCol[2] = 2;
+			}
+			else if(piece.getOrientation() == 3)
+			{
+				pieceCellDeltasRow[0] = 0;
+				pieceCellDeltasCol[0] = 1;
+				pieceCellDeltasRow[1] = -1;
+				pieceCellDeltasCol[1] = 1;
+				pieceCellDeltasRow[2] = -2;
+				pieceCellDeltasCol[2] = 1;	
+			}
+		}
+		else if(piece.getPiece().equals("T"))
+		{
+			if(piece.getOrientation() == 0)
+			{
+				pieceCellDeltasRow[0] = 0;
+				pieceCellDeltasCol[0] = 1;
+				pieceCellDeltasRow[1] = 0;
+				pieceCellDeltasCol[1] = 2;
+				pieceCellDeltasRow[2] = 1;
+				pieceCellDeltasCol[2] = 1;
+			}
+			else if(piece.getOrientation() == 1)
+			{
+				pieceCellDeltasRow[0] = -1;
+				pieceCellDeltasCol[0] = 0;
+				pieceCellDeltasRow[1] = -2;
+				pieceCellDeltasCol[1] = 0;
+				pieceCellDeltasRow[2] = -1;
+				pieceCellDeltasCol[2] = 1;
+			}
+			else if(piece.getOrientation() == 2)
+			{
+				pieceCellDeltasRow[0] = 0;
+				pieceCellDeltasCol[0] = 1;
+				pieceCellDeltasRow[1] = 0;
+				pieceCellDeltasCol[1] = 2;
+				pieceCellDeltasRow[2] = -1;
+				pieceCellDeltasCol[2] = 1;
+			}
+			else if(piece.getOrientation() == 3)
+			{
+				pieceCellDeltasRow[0] = -1;
+				pieceCellDeltasCol[0] = 1;
+				pieceCellDeltasRow[1] = 0;
+				pieceCellDeltasCol[1] = 1;
+				pieceCellDeltasRow[2] = 1;
+				pieceCellDeltasCol[2] = 1;
+			}
+		}
+		
+		int[][] pieceCellDeltas = new int[2][3];
+		pieceCellDeltas[0] = pieceCellDeltasRow;
+		pieceCellDeltas[1] = pieceCellDeltasCol;
+		
+		return pieceCellDeltas;
 	}
 	
 	public int determineLowestAvailablePieceRow(int[][] pieceMask)
