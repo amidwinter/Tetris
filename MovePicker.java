@@ -91,7 +91,7 @@ public class MovePicker extends Thread{
 								int boardDeltaY = boardY + maskDeltaY;
 								int boardDeltaX = boardX + maskDeltaX;
 								
-								if(boardDeltaY < 0 || boardDeltaY > 19 || boardDeltaX < 0 || boardDeltaX > 19) {
+								if(boardDeltaY < 0 || boardDeltaY > 19 || boardDeltaX < 0 || boardDeltaX > 9) {
 									//piece would be out of bounds
 									continueCheckingMask = false;
 									break;
