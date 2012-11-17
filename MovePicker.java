@@ -210,8 +210,29 @@ public class MovePicker extends Thread{
 		return moveString;
 	}
 	
-	public boolean wouldClearRow(int moveRow, int moveCol) {
-			return false;
+	public boolean wouldClearRow(int moveRow, int moveCol, Piece currentPiece, int[][] boardState) {
+		int rowToClear = moveRow;
+		int pieceDeltas = getPieceCellDeltas(currentPiece);
+		int[] cellsInPieceAndRow = new int[3];
+		
+		
+		int [] rowColsFilled = new int[10];
+		for(int i = 0; i < 10; i++) {
+			rowColsFilled[i] = boardState[moveRow][i];
+		}
+		
+		for(int i = 0; i < 3; i++) {
+			if(pieceDeltas[0][i] == 0)
+				rowColsFilled[moveCol + pieceDeltas[1][i]] = 1;
+		}
+		
+		for(int i = 0; i < 10; i++) {
+			if(rowColsFilled[i] == 0)
+				return false;
+		}
+		
+		return true;
+		
 	}
 	
 	public boolean checkLegality(int boardRow, int boardCol, int[][] boardState)
