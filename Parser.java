@@ -1,4 +1,5 @@
 import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.HashMap;
 
@@ -28,21 +29,7 @@ public class Parser
 		String game_name;
 		String sequence;
 		float timestamp;
-		public class states
-		{
-			public class client1
-			{
-				String board_state;
-				int piece_number;
-				int[] cleared_rows;
-			}
-			public class client2
-			{
-				String board_state;
-				int piece_number;
-				int[] cleared_rows;
-			}
-		}
+		states states;
 		String[] queue;
 	}
 	
@@ -52,28 +39,64 @@ public class Parser
 		String game_name;
 		String sequence;
 		float timestamp;
-		public class states
-		{
-			public class client1
-			{
-				int orient;
-				String piece;
-				int number;
-				int row;
-				int col;
-			}
-			public class client2
-			{
-				int orient;
-				String piece;
-				int number;
-				int row;
-				int col;
-			}
-		}
+		states states;
 		String[] queue;
 	}
 	
+	public class states
+	{
+		Team70 Team70;
+		client2 client2;
+	}
+	
+	public class Team70
+	{
+		String board_state;
+		int piece_number;
+		int[] cleared_rows;
+		int orient;
+		String piece;
+		int number;
+		int row;
+		int col;
+	}
+	
+	public class client2
+	{
+		String board_state;
+		int piece_number;
+		int[] cleared_rows;
+		int orient;
+		String piece;
+		int number;
+		int row;
+		int col;
+	}
+	
+	public class GameEnd
+	{
+		String comm_type;
+		String game_name;
+		int sequence;
+		float timestamp;
+		scores scores;
+		String winner;
+		String match_token;
+	}
+	
+	public class scores
+	{
+		int Team70;
+		int client2;
+	}
+	
+	public class MatchEnd
+	{
+		String comm_type;
+		String match_name;
+		String match_token;
+		String status;
+	}
 	
 	
 	/**
@@ -93,6 +116,7 @@ public class Parser
 	public boolean parseMessage(String JSON)
 	{	
 		Gson gson = new Gson();
+		JSON = JSON.replaceAll("\\s", "");
 		Field[] fields = null;
 		boolean success = true;
 		// Deciding what type of message this is
@@ -112,14 +136,39 @@ public class Parser
 		else if(commType.equals("GameBoardState"))
 		{
 			GameBoardState GBS = gson.fromJson(JSON, GameBoardState.class);
-			fields = GameBoardState.states.client1.class.getDeclaredFields();
-			msg = convertToMap(fields, GBS);
+			fields = Team70.class.getDeclaredFields();
+			Map<String, String> map1 = convertToMap(fields, GBS.states.Team70);
+			fields = GameBoardState.class.getDeclaredFields();
+			Map<String, String> map2 = convertToMap(fields, GBS);
+			msg.putAll(map1);
+			msg.putAll(map2);
+			
 		}
 		else if(commType.equals("GamePieceState"))
 		{
 			GamePieceState GPS = gson.fromJson(JSON, GamePieceState.class);
-			fields = GamePieceState.states.client1.class.getDeclaredFields();
-			msg = convertToMap(fields, GPS);
+			fields = Team70.class.getDeclaredFields();
+			Map<String, String> map1 = convertToMap(fields, GPS.states.Team70);
+			fields = GamePieceState.class.getDeclaredFields();
+			Map<String, String> map2 = convertToMap(fields, GPS);
+			msg.putAll(map1);
+			msg.putAll(map2);
+		}
+		else if(commType.equals("GameEnd"))
+		{
+			GameEnd GE = gson.fromJson(JSON, GameEnd.class);
+			fields = scores.class.getDeclaredFields();
+			Map<String, String> map1 = convertToMap(fields, GE.scores);
+			fields = GameEnd.class.getDeclaredFields();
+			Map<String, String> map2 = convertToMap(fields, GE);
+			msg.putAll(map1);
+			msg.putAll(map2);
+		}
+		else if(commType.equals("MatchEnd"))
+		{
+			MatchEnd ME = gson.fromJson(JSON, MatchEnd.class);
+			fields = GameMove.class.getDeclaredFields();
+			msg = convertToMap(fields, ME);
 		}
 		else
 			success = false;
@@ -133,13 +182,43 @@ public class Parser
 		Map<String,String> tempMap = new HashMap<String, String>();
 		try
 		{
-			for(int i = 0; fields[i] != null; i++)
+			for(int i = 0; i < fields.length; i++)
 			{
 				
-				System.out.println(fields[i].getName() + " " + (String)fields[i].get(o) + " " + i);
-				
+				//System.out.println(fields[i].getName() + " " + (String)fields[i].get(o) + " " + i);
+				String value = "";
 				String name = fields[i].getName();
-				String value = (String)fields[i].get(o);
+				if(fields[i].get(o) == null)
+				{
+					System.out.println("null!");
+				}
+				else if(fields[i].get(o).getClass() == states.class)
+				{
+					System.out.println("states!");
+				}
+				else if(fields[i].get(o).getClass() == scores.class)
+				{
+					System.out.println("scores!");
+				}
+				else if(fields[i].get(o).getClass() == int[].class)
+				{
+					int[] valueIntArr = (int[])fields[i].get(o);
+					
+					value = Arrays.toString(valueIntArr);
+					System.out.println("int[]!   " + value);
+				}
+				else if(fields[i].get(o).getClass() == String[].class)
+				{
+					String[] valueStringArr = (String[])fields[i].get(o);
+					value = Arrays.toString(valueStringArr);
+					System.out.println("string[]!   " + value);
+				}
+				else
+				{
+					value = fields[i].get(o).toString();
+					System.out.println("string!   " + value);
+				}
+				
 				tempMap.put(name, value);
 			}
 		}
