@@ -24,11 +24,45 @@ public class MovePicker extends Thread{
 			reqRespSocket.send(moveString.getBytes(), 0);
 			byte[] response = reqRespSocket.recv(0);
 			System.out.println("response: " + new String(response));
+			
+			boolean[][] array = boardStateToArray("0000000000000000000000000000000000000000000000c030");
+			
+			for(int i = 0; i < 20; i++) {
+				for(int j = 0; j < 10; j++)
+					System.out.print(": " + array[i][j] + " :");
+				System.out.println();
+			}
+			
 		}
 		catch(org.zeromq.ZMQException e) {
 			System.out.println(e);
 			return;
 		}
 
+	}
+	
+	/*
+	 * Breaks hexadecimal boardState string into a binary string, and then into a 2D array of booleans
+	 * 
+	 * @parameters boardState - the hexadecimal representation of the board state
+	 * @return a 2D boolean array representation of the board state
+	 */
+	private boolean[][] boardStateToArray(String boardState) {
+		int boardStateIntValue = Integer.parseInt(boardState, 16);
+		String boardStateBinaryValue = Integer.toBinaryString(boardStateIntValue);
+		char[] boardStateBinaryValueCharArray = boardStateBinaryValue.toCharArray();
+		
+		boolean[][] boardStateArray = new boolean[20][10];
+		
+		for(int i = 0; i < 20; i++) {
+			for(int j = 0; j < 10; j++) {
+				if(boardStateBinaryValueCharArray[i + j] == '1') 
+					boardStateArray[i][j] = true;
+				else if(boardStateBinaryValueCharArray[i + j] == '0')
+					boardStateArray[i][j] = false;
+			}
+		}
+		
+		return boardStateArray;
 	}
 }
