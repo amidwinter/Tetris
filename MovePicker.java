@@ -155,7 +155,7 @@ public class MovePicker extends Thread{
 		
 		int[][] moves = determineLowestAvailableMoves(boardState, currentPiece);
 		int[] moveScores = new int[100];
-		int[][] weightedBoard = getWeightedBoard(boardState);
+		double[][] weightedBoard = getWeightedBoard(boardState);
 		
 		for(int i = 0; i < moves.length; i++) {
 			if(moves[0][i] == null || moves[1][i] == null) 
@@ -176,7 +176,7 @@ public class MovePicker extends Thread{
 			}
 		}
 		
-		int bestScore = 0;
+		double bestScore = 0;
 		int bestMove = 0;
 		for(int i = 0; i < moves.length; i++) {
 			if(moves[0][i] == null || moves[1][i] == null || moveScores[i] == null)
