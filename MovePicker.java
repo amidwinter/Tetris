@@ -48,9 +48,9 @@ public class MovePicker extends Thread{
 	 * @return a 2D boolean array representation of the board state
 	 */
 	private int[][] boardStateToArray(String boardState) {		
-		long boardStateIntValue = Integer.parseInt(boardState, 16);
+		long boardStateIntValue = Long.parseLong(boardState, 16);
 		System.out.println("int: " + boardStateIntValue);
-		String boardStateBinaryValue = String.format("%200s", Integer.toBinaryString(1)).replace(' ', '0');
+		String boardStateBinaryValue = String.format("%200s", Long.toBinaryString(boardStateIntValue)).replace(' ', '0');
 //		String boardStateBinaryValue = Integer.toBinaryString(boardStateIntValue);
 		System.out.println("bin: " + boardStateBinaryValue);
 		char[] boardStateBinaryValueCharArray = boardStateBinaryValue.toCharArray();
