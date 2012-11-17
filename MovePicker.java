@@ -619,10 +619,6 @@ public class MovePicker extends Thread{
 			//If orientation is different, change orientation first
 		if(moves[highestRecord] == null)	//there are no moves, so send default "down" move
 			move = "down";
-		else if(currentPiece.getOrientation() != moves[highestRecord].orient)
-		{
-			move = "lrotate";
-		}
 		else if(currentPiece.getCol() != moves[highestRecord].centerCol)
 		{
 			if(currentPiece.getCol() > moves[highestRecord].centerCol)
@@ -634,6 +630,11 @@ public class MovePicker extends Thread{
 				move = "right";
 			}
 		}
+		else if(currentPiece.getOrientation() != moves[highestRecord].orient)
+		{
+			move = "lrotate";
+		}
+		
 		else if(currentPiece.getRow() != moves[highestRecord].centerRow)
 		{
 			move = "drop";
