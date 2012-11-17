@@ -20,14 +20,16 @@ public class MovePicker extends Thread{
 	 */
 	public void run() {
 		try{
-			String boardStateString = currentBoard.getBoardState();
-			int[][] boardStateArray = boardStateToArray(boardStateString);
-			String move = determineMoveBasic(boardStateArray);
-			String moveString = "{ \"comm_type\" : \"GameMove\", \"client_token\" : \"" + clientToken + "\", \"move\" : \"" + move + "\" }"; 
-			System.out.println(moveString);
-			reqRespSocket.send(moveString.getBytes(), 0);
-			byte[] response = reqRespSocket.recv(0);
-			System.out.println("response: " + new String(response));			
+			if(currentBoard.isSet() && currentPiece.isSet()) {
+				String boardStateString = currentBoard.getBoardState();
+				int[][] boardStateArray = boardStateToArray(boardStateString);
+				String move = determineMoveBasic(boardStateArray);
+				String moveString = "{ \"comm_type\" : \"GameMove\", \"client_token\" : \"" + clientToken + "\", \"move\" : \"" + move + "\" }"; 
+				System.out.println(moveString);
+				reqRespSocket.send(moveString.getBytes(), 0);
+				byte[] response = reqRespSocket.recv(0);
+				System.out.println("response: " + new String(response));
+			}
 		}
 		catch(org.zeromq.ZMQException e) {
 			System.out.println(e);

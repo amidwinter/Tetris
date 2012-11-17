@@ -5,6 +5,7 @@ public class Board {
 	private String boardState;
 	private int pieceNumber;
 	private String clearedRows;
+	private boolean isSet = false;
 	
 	public Board() {
 		boardState = "";
@@ -16,6 +17,7 @@ public class Board {
 		this.boardState = boardState;
 		this.pieceNumber = pieceNumber;
 		this.clearedRows = clearedRows;
+		this.isSet = true;
 	}
 	
 	/*	Compares existing values to values passed as parameters. 
@@ -42,5 +44,9 @@ public class Board {
 	
 	public String getBoardState() {
 		return this.boardState;
+	}
+	
+	public boolean isSet() {
+		return this.isSet;
 	}
 }

@@ -7,6 +7,7 @@ public class Piece {
 	private int number;
 	private int row;
 	private int col;
+	private boolean isSet = false;
 	
 	public Piece() {
 		orientation = 0;
@@ -22,6 +23,7 @@ public class Piece {
 		this.number = number;
 		this.row = row;
 		this.col = col;
+		this.isSet = true;
 	}
 	
 	/*	Compares existing values to values passed as parameters. 
@@ -237,5 +239,9 @@ public class Piece {
 	
 	public int getCol() {
 		return this.col;
+	}
+	
+	public boolean isSet() {
+		return this.isSet;
 	}
 }
