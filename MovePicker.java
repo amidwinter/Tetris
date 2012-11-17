@@ -192,7 +192,7 @@ public class MovePicker extends Thread{
 		//Loops for each orientation type
 		
 		
-		Move [] moves = new Move[10];
+		Move [] moves = new Move[100];
 		int moveIterator = 0;
 		for(int orient = 0; orient < numOrientations; orient++)
 		{
