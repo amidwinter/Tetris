@@ -150,8 +150,12 @@ public class MovePicker extends Thread{
 		return move;
 	}
 	
+	
+	
 	public String determineMoveWeightedNew(int[][] boardState) {
 		String move = "drop";
+		
+		Piece tempPiece = new Piece(
 		
 		int[][] moves = determineLowestAvailableMoves(boardState, currentPiece);
 		double[] moveScores = new double[100];
@@ -189,22 +193,28 @@ public class MovePicker extends Thread{
 				bestScore = moveScores[i];
 				bestMove = i;
 			}
+			else if(wouldClearRow(moves[0][i], moves[1][i])) {
+				bestMove = i;
+				break;
+			}
 		}
 		String moveString = "down";
 		int currentPieceCol = currentPiece.getCol();
-		if(moves[1][bestMove] < currentPieceCol)
+		if(moves[1][bestMove] + getOrigin(currentPiece) < currentPieceCol)
 			//move is left of piece
 			moveString = "left";
-		else if(moves[1][bestMove] > currentPieceCol)
+		else if(moves[1][bestMove] + getOrigin(currentPiece)  > currentPieceCol)
 			//move is right of piece
 			moveString = "right";
-		else if(moves[1][bestMove] == currentPieceCol)
+		else if(moves[1][bestMove] + getOrigin(currentPiece) == currentPieceCol)
 			moveString = "drop";
 		
 		return moveString;
 	}
 	
-	
+	public boolean wouldClearRow(int moveRow, int moveCol) {
+			return false;
+	}
 	
 	public boolean checkLegality(int boardRow, int boardCol, int[][] boardState)
 	{
@@ -226,7 +236,7 @@ public class MovePicker extends Thread{
 		double bordersBlockWeight = 2;
 		double potentialHoleWeight = 1;
 		double wouldCreateHoleWeight = -5;
-		double heightWeight = 2;
+		double heightWeight = 3;
 		double floorWeight = 3;
 		
 		for(int row = 19; row >= 0; row--) {
