@@ -158,12 +158,12 @@ public class MovePicker extends Thread{
 		double[][] weightedBoard = getWeightedBoard(boardState);
 		
 		for(int i = 0; i < moves.length; i++) {
-			if(moves[0][i] == null || moves[1][i] == null) 
-				break;
-			else {
+			//if(moves[0][i] == null || moves[1][i] == null) 
+			//	break;
+			//else {
 				for(int j = 0; j < 3; j++) {
-					int pieceOnBoardRow = row + pieceDeltasRow[j];
-					int pieceOnBoardCol = col + pieceDeltasCol[j];
+					int pieceOnBoardRow = moves[0][i] + pieceDeltasRow[j];
+					int pieceOnBoardCol = moves[1][i] + pieceDeltasCol[j];
 					
 					if(pieceOnBoardRow < 0 || pieceOnBoardRow > 19 || pieceOnBoardCol < 0 || pieceOnBoardCol > 9) {
 						break;
@@ -173,7 +173,7 @@ public class MovePicker extends Thread{
 						moveScores[i] = weightedBoard[pieceOnBoardRow][pieceOnBoardCol];
 					}
 				}
-			}
+			//}
 		}
 		
 		double bestScore = 0;
