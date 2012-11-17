@@ -580,6 +580,8 @@ public class MovePicker extends Thread{
 		
 		//Now compare current position to desired position...choose move to do
 			//If orientation is different, change orientation first
+		System.out.println("getOrientation: " + currentPiece.getOrientation());
+		System.out.println("move: " + moves[highestRecord].orient);
 		if(currentPiece.getOrientation() != moves[highestRecord].orient)
 		{
 			move = "lrotate";
