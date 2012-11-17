@@ -226,7 +226,7 @@ public class MovePicker extends Thread{
 		double bordersBlockWeight = 2;
 		double potentialHoleWeight = 1;
 		double wouldCreateHoleWeight = -5;
-		double heightWeight = 1;
+		double heightWeight = 2;
 		double floorWeight = 3;
 		
 		for(int row = 19; row >= 0; row--) {
