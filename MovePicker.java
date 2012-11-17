@@ -816,10 +816,17 @@ public class MovePicker extends Thread{
 					for(i = 0; i < 4; i++) {
 						int pieceCellOnBoardRow = row + pieceCellDeltasRow[i];
 						int pieceCellOnBoardCol = col + pieceCellDeltasCol[i];
-						int pieceCellOnBoard = boardState[pieceCellOnBoardRow][pieceCellOnBoardCol];
-						if(pieceCellOnBoard == 1) {
+						
+						if(pieceCellOnBoardRow < 0 || pieceCellOnBoardRow > 19 || pieceCellOnBoardCol < 0 || pieceCellOnBoardCol > 9) {
 							foundLowestRow = false;
 							break;
+						}
+						else {
+							int pieceCellOnBoard = boardState[pieceCellOnBoardRow][pieceCellOnBoardCol];
+							if(pieceCellOnBoard == 1) {
+								foundLowestRow = false;
+								break;
+							}
 						}
 					}
 					if(i == 4) {
