@@ -1,7 +1,25 @@
 import org.zeromq.ZMQ;
-import java.math.BigInteger;
+import java.math.*;
 
 public class MovePicker extends Thread{
+	
+	public class Move
+	{
+		public int []row;
+		public int []col;
+		public int orient;
+		public int centerCol;
+		public int centerRow;
+		double score;
+		public Move(int []Arow, int []Acol, int Aorient)
+		{
+			row = Arow;
+			col = Acol;
+			orient = Aorient;
+			score = 0;
+		}
+	}
+	
 	private String clientToken;
 	private ZMQ.Socket reqRespSocket;
 	private Board currentBoard;
@@ -146,9 +164,8 @@ public class MovePicker extends Thread{
 		double [][]weightedBoard = getWeightedBoard(boardState);
 		//First, look at bottom available row
 			//TODO: Determine availability: Check if row covered, check holes(not sure if needed yet) - method below should do this
-		int lowestBoardRow = determineLowestAvailableBoardRow(boardState); // (actually the highest board #)
 		
-		//Second, determine what moves can be made on bottom row
+		
 		//Determine first row of pieceMask containing a 1
 		int lowestPieceRow = determineLowestAvailablePieceRow(currentPieceMask);
 		//Determine first column of pieceMask containing a 1
@@ -156,57 +173,442 @@ public class MovePicker extends Thread{
 		
 		int pieceRow = lowestPieceRow;
 		int pieceCol = lowestPieceCol;
+		int lowestBoardRow = determineLowestAvailableBoardRow(boardState); // (actually the highest board #)
 		int boardRow = lowestBoardRow;
-		
-		boolean feasibleMove = false;
-		int i = 0;
-		
-		//Creating an 
-		int []possibleMoves = new int[10];
-		
-		
-		
-		
-		while(i < 10)
+		int numOrientations = 0;
+		if(currentPiece.getPiece().equals("O"))
 		{
-			if(currentPieceMask[pieceRow][pieceCol] + boardState[boardRow][i] == 1)
+			numOrientations = 1;
+		}
+		else if(currentPiece.getPiece().equals("I") || currentPiece.getPiece().equals("S") || currentPiece.getPiece().equals("Z"))
+		{
+			numOrientations = 2;
+		}
+		else if(currentPiece.getPiece().equals("L") || currentPiece.getPiece().equals("J") || currentPiece.getPiece().equals("Z"))
+		{
+			numOrientations = 4;
+		}
+		
+		//Loops for each orientation type
+		
+		
+		Move [] moves = new Move[10];
+		int moveIterator = 0;
+		for(int orient = 0; orient < numOrientations; orient++)
+		{
+			//iterate board rows FIX THIS LOOP MAX IS WRONG
+			for(int i = boardRow; i > boardRow-1; i--)
 			{
-				//Save the cell this move was made in
-				possibleMove[lowestBoardRow][i] = 1;
-				feasibleMove = true;
-				//check if the piece has a 1 to its right
-				if(currentPieceMask[pieceRow][pieceCol + 1] == 1)
+				for(int k = 0; k < 10; k++)
 				{
-					if(currentPieceMask[pieceRow][pieceCol + 1] + boardState[boardRow][i + 1] == 1)
+					if(currentPiece.getPiece().equals("O"))
 					{
-						//Save the cell this move was made in
-						possibleMove[lowestBoardRow][i + 1] = 1;
-						//both cells on this row fit...move up a row
-						
+						if((boardState[boardRow][k] == 0) && (boardState[boardRow - 1][k] == 0) && (boardState[boardRow - 1][k + 1] == 0) && (boardState[boardRow][k + 1] == 0))
+						{
+							boolean goodMove = checkLegality(boardRow, k, boardState) && checkLegality(boardRow-1, k, boardState) && checkLegality(boardRow-1, k+1, boardState) && checkLegality(boardRow, k+1, boardState);
+							if(goodMove == true)
+							{
+								int[] rows = {boardRow, boardRow - 1, boardRow - 1, boardRow};
+								int[] cols = {k, k, k+1, k+1};
+								
+								moves[moveIterator] = new Move(rows, cols, 0);
+								moves[moveIterator].centerCol = k+1;
+								moves[moveIterator].centerRow = boardRow-1;
+								moveIterator++;
+							}
+						}
 					}
-					else
+					else if(currentPiece.getPiece().equals("I"))
 					{
-						feasibleMove = false;
-						//There was something in the way. This move will not work
+						if(orient == 0)
+						{
+							if((boardState[boardRow][k] == 0) && (boardState[boardRow][k+1] == 0) && (boardState[boardRow][k+2] == 0)  && (boardState[boardRow][k+3] == 0) )
+							{
+								boolean goodMove = checkLegality(boardRow, k, boardState) && checkLegality(boardRow, k+1, boardState) && checkLegality(boardRow, k+2, boardState) && checkLegality(boardRow, k+3, boardState);
+								if(goodMove == true)
+								{
+									int[] rows = {boardRow, boardRow, boardRow, boardRow};
+									int[] cols = {k, k+1, k+2, k+3};
+									
+									moves[moveIterator] = new Move(rows, cols, orient);
+									moves[moveIterator].centerCol = k+2;
+									moves[moveIterator].centerRow = boardRow;
+									moveIterator++;
+								}
+							}
+						}
+						else if(orient == 1)
+						{
+							if((boardState[boardRow][k] == 0) && (boardState[boardRow-1][k] == 0) && (boardState[boardRow-2][k] == 0)  && (boardState[boardRow-3][k] == 0) )
+							{
+								boolean goodMove = checkLegality(boardRow, k, boardState) && checkLegality(boardRow-1, k, boardState) && checkLegality(boardRow-2, k, boardState) && checkLegality(boardRow-3, k, boardState);
+								if(goodMove == true)
+								{
+									int[] rows = {boardRow, boardRow - 1, boardRow - 2, boardRow-3};
+									int[] cols = {k, k, k, k};
+									
+									moves[moveIterator] = new Move(rows, cols, orient);
+									moves[moveIterator].centerCol = k;
+									moves[moveIterator].centerRow = boardRow-2;
+									moveIterator++;
+								}
+							}
+						}
 					}
+					else if(currentPiece.getPiece().equals("S"))
+					{
+						if(orient == 0)
+						{
+							if((boardState[boardRow][k] == 0) && (boardState[boardRow][k+1] == 0) && (boardState[boardRow-1][k+1] == 0)  && (boardState[boardRow-1][k+2] == 0) )
+							{
+								boolean goodMove = checkLegality(boardRow, k, boardState) && checkLegality(boardRow, k+1, boardState) && checkLegality(boardRow-1, k+1, boardState) && checkLegality(boardRow-1, k+2, boardState);
+								if(goodMove == true)
+								{
+									int[] rows = {boardRow, boardRow, boardRow - 1, boardRow-1};
+									int[] cols = {k, k+1, k+1, k+2};
+									
+									moves[moveIterator] = new Move(rows, cols, orient);
+									moves[moveIterator].centerCol = k+1;
+									moves[moveIterator].centerRow = boardRow-1;
+									moveIterator++;
+								}
+							}
+						}
+						else if(orient == 1)
+						{
+							if((boardState[boardRow][k] == 0) && (boardState[boardRow-1][k] == 0) && (boardState[boardRow-1][k-1] == 0)  && (boardState[boardRow-2][k-1] == 0) )
+							{
+								boolean goodMove = checkLegality(boardRow, k, boardState) && checkLegality(boardRow-1, k, boardState) && checkLegality(boardRow-1, k-1, boardState) && checkLegality(boardRow-2, k-1, boardState);
+								if(goodMove == true)
+								{
+									int[] rows = {boardRow, boardRow - 1, boardRow - 1, boardRow-2};
+									int[] cols = {k, k, k-1, k-1};
+									
+									moves[moveIterator] = new Move(rows, cols, orient);
+									moves[moveIterator].centerCol = k-1;
+									moves[moveIterator].centerRow = boardRow-1;
+									moveIterator++;
+								}
+							}
+						}
+					}
+					else if(currentPiece.getPiece().equals("Z"))
+					{
+						if(orient == 0)
+						{
+							if((boardState[boardRow][k] == 0) && (boardState[boardRow][k+1] == 0) && (boardState[boardRow-1][k] == 0)  && (boardState[boardRow-1][k-1] == 0) )
+							{
+								boolean goodMove = checkLegality(boardRow, k, boardState) && checkLegality(boardRow, k+1, boardState) && checkLegality(boardRow-1, k, boardState) && checkLegality(boardRow-1, k-1, boardState);
+								if(goodMove == true)
+								{
+									int[] rows = {boardRow, boardRow, boardRow - 1, boardRow-1};
+									int[] cols = {k, k+1, k, k-1};
+									
+									moves[moveIterator] = new Move(rows, cols, orient);
+									moves[moveIterator].centerCol = k;
+									moves[moveIterator].centerRow = boardRow-1;
+									moveIterator++;
+								}
+							}
+						}
+						else if(orient == 1)
+						{
+							if((boardState[boardRow][k] == 0) && (boardState[boardRow-1][k] == 0) && (boardState[boardRow-1][k+1] == 0)  && (boardState[boardRow-2][k+1] == 0) )
+							{
+								boolean goodMove = checkLegality(boardRow, k, boardState) && checkLegality(boardRow-1, k, boardState) && checkLegality(boardRow-1, k+1, boardState) && checkLegality(boardRow-2, k+1, boardState);
+								if(goodMove == true)
+								{
+									int[] rows = {boardRow, boardRow - 1, boardRow - 1, boardRow-2};
+									int[] cols = {k, k, k+1, k+1};
+									
+									moves[moveIterator] = new Move(rows, cols, orient);
+									moves[moveIterator].centerCol = k;
+									moves[moveIterator].centerRow = boardRow-1;
+									moveIterator++;
+								}
+							}
+						}
+					}
+					else if(currentPiece.getPiece().equals("L"))
+					{
+						if(orient == 0)
+						{
+							if((boardState[boardRow][k] == 0) && (boardState[boardRow-1][k] == 0) && (boardState[boardRow-1][k+1] == 0)  && (boardState[boardRow-1][k+2] == 0) )
+							{
+								boolean goodMove = checkLegality(boardRow, k, boardState) && checkLegality(boardRow-1, k, boardState) && checkLegality(boardRow-1, k+1, boardState) && checkLegality(boardRow-1, k+2, boardState);
+								if(goodMove == true)
+								{
+									int[] rows = {boardRow, boardRow - 1, boardRow - 1, boardRow-1};
+									int[] cols = {k, k, k+1, k+2};
+									
+									moves[moveIterator] = new Move(rows, cols, orient);
+									moves[moveIterator].centerCol = k+1;
+									moves[moveIterator].centerRow = boardRow-1;
+									moveIterator++;
+								}
+							}
+						}
+						else if(orient == 1)
+						{
+							if((boardState[boardRow][k] == 0) && (boardState[boardRow][k+1] == 0) && (boardState[boardRow-1][k] == 0)  && (boardState[boardRow-2][k] == 0) )
+							{
+								boolean goodMove = checkLegality(boardRow, k, boardState) && checkLegality(boardRow, k+1, boardState) && checkLegality(boardRow-1, k, boardState) && checkLegality(boardRow-2, k, boardState);
+								if(goodMove == true)
+								{
+									int[] rows = {boardRow, boardRow, boardRow - 1, boardRow-2};
+									int[] cols = {k, k+1, k, k};
+									
+									moves[moveIterator] = new Move(rows, cols, orient);
+									moves[moveIterator].centerCol = k;
+									moves[moveIterator].centerRow = boardRow-1;
+									moveIterator++;
+								}
+							}
+						}
+						if(orient == 2)
+						{
+							if((boardState[boardRow][k] == 0) && (boardState[boardRow][k+1] == 0) && (boardState[boardRow][k+2] == 0)  && (boardState[boardRow-1][k+2] == 0) )
+							{
+								boolean goodMove = checkLegality(boardRow, k, boardState) && checkLegality(boardRow, k+1, boardState) && checkLegality(boardRow, k+2, boardState) && checkLegality(boardRow-1, k+2, boardState);
+								if(goodMove == true)
+								{
+									int[] rows = {boardRow, boardRow, boardRow, boardRow-1};
+									int[] cols = {k, k+1, k+2, k+2};
+									
+									moves[moveIterator] = new Move(rows, cols, orient);
+									moves[moveIterator].centerCol = k+1;
+									moves[moveIterator].centerRow = boardRow;
+									moveIterator++;
+								}
+							}
+						}
+						else if(orient == 3)
+						{
+							if((boardState[boardRow][k] == 0) && (boardState[boardRow-1][k] == 0) && (boardState[boardRow-2][k] == 0)  && (boardState[boardRow-2][k-1] == 0) )
+							{
+								boolean goodMove = checkLegality(boardRow, k, boardState) && checkLegality(boardRow-1, k, boardState) && checkLegality(boardRow-2, k, boardState) && checkLegality(boardRow-2, k-1, boardState);
+								if(goodMove == true)
+								{
+									int[] rows = {boardRow, boardRow - 1, boardRow - 2, boardRow-2};
+									int[] cols = {k, k, k, k-1};
+									
+									moves[moveIterator] = new Move(rows, cols, orient);
+									moves[moveIterator].centerCol = k;
+									moves[moveIterator].centerRow = boardRow-1;
+									moveIterator++;
+								}
+							}
+						}
+					}
+					else if(currentPiece.getPiece().equals("J"))
+					{
+						if(orient == 0)
+						{
+							if((boardState[boardRow][k] == 0) && (boardState[boardRow-1][k] == 0) && (boardState[boardRow-1][k-1] == 0)  && (boardState[boardRow-1][k-2] == 0) )
+							{
+								boolean goodMove = checkLegality(boardRow, k, boardState) && checkLegality(boardRow-1, k, boardState) && checkLegality(boardRow-1, k-1, boardState) && checkLegality(boardRow-1, k-2, boardState);
+								if(goodMove == true)
+								{
+									int[] rows = {boardRow, boardRow - 1, boardRow - 1, boardRow-1};
+									int[] cols = {k, k, k-1, k-2};
+									
+									moves[moveIterator] = new Move(rows, cols, orient);
+									moves[moveIterator].centerCol = k+1;
+									moves[moveIterator].centerRow = boardRow;
+									moveIterator++;
+								}
+							}
+						}
+						else if(orient == 1)
+						{
+							if((boardState[boardRow][k] == 0) && (boardState[boardRow-1][k] == 0) && (boardState[boardRow-2][k] == 0)  && (boardState[boardRow-2][k+1] == 0) )
+							{
+								boolean goodMove = checkLegality(boardRow, k, boardState) && checkLegality(boardRow-1, k, boardState) && checkLegality(boardRow-2, k, boardState) && checkLegality(boardRow-2, k+1, boardState);
+								if(goodMove == true)
+								{
+									int[] rows = {boardRow, boardRow - 1, boardRow - 2, boardRow-2};
+									int[] cols = {k, k, k, k+1};
+									
+									moves[moveIterator] = new Move(rows, cols, orient);
+									moves[moveIterator].centerCol = k;
+									moves[moveIterator].centerRow = boardRow-1;
+									moveIterator++;
+								}
+							}
+						}
+						if(orient == 2)
+						{
+							if((boardState[boardRow][k] == 0) && (boardState[boardRow][k+1] == 0) && (boardState[boardRow][k+2] == 0)  && (boardState[boardRow-1][k] == 0) )
+							{
+								boolean goodMove = checkLegality(boardRow, k, boardState) && checkLegality(boardRow, k+1, boardState) && checkLegality(boardRow, k+2, boardState) && checkLegality(boardRow-1, k, boardState);
+								if(goodMove == true)
+								{
+									int[] rows = {boardRow, boardRow, boardRow, boardRow-1};
+									int[] cols = {k, k+1, k+2, k};
+									
+									moves[moveIterator] = new Move(rows, cols, orient);
+									moves[moveIterator].centerCol = k+1;
+									moves[moveIterator].centerRow = boardRow;
+									moveIterator++;
+								}
+							}
+						}
+						else if(orient == 3)
+						{
+							if((boardState[boardRow][k] == 0) && (boardState[boardRow][k+1] == 0) && (boardState[boardRow-1][k+1] == 0)  && (boardState[boardRow-2][k+1] == 0) )
+							{
+								boolean goodMove = checkLegality(boardRow, k, boardState) && checkLegality(boardRow, k+1, boardState) && checkLegality(boardRow-1, k+1, boardState) && checkLegality(boardRow-2, k+1, boardState);
+								if(goodMove == true)
+								{
+									int[] rows = {boardRow, boardRow, boardRow - 1, boardRow-2};
+									int[] cols = {k, k+1, k+1, k+1};
+									
+									moves[moveIterator] = new Move(rows, cols, orient);
+									moves[moveIterator].centerCol = k+1;
+									moves[moveIterator].centerRow = boardRow-1;
+									moveIterator++;
+								}
+							}
+						}
+					}
+					else if(currentPiece.getPiece().equals("T"))
+					{
+						if(orient == 0)
+						{
+							if((boardState[boardRow][k] == 0) && (boardState[boardRow-1][k] == 0) && (boardState[boardRow-1][k+1] == 0)  && (boardState[boardRow-1][k-1] == 0) )
+							{
+								boolean goodMove = checkLegality(boardRow, k, boardState) && checkLegality(boardRow-1, k, boardState) && checkLegality(boardRow-1, k+1, boardState) && checkLegality(boardRow-1, k-1, boardState);
+								if(goodMove == true)
+								{
+									int[] rows = {boardRow, boardRow - 1, boardRow - 1, boardRow-1};
+									int[] cols = {k, k, k+1, k-1};
+									
+									moves[moveIterator] = new Move(rows, cols, orient);
+									moves[moveIterator].centerCol = k;
+									moves[moveIterator].centerRow = boardRow-1;
+									moveIterator++;
+								}
+							}
+						}
+						else if(orient == 1)
+						{
+							if((boardState[boardRow][k] == 0) && (boardState[boardRow-1][k] == 0) && (boardState[boardRow-1][k+1] == 0)  && (boardState[boardRow-2][k] == 0) )
+							{
+								boolean goodMove = checkLegality(boardRow, k, boardState) && checkLegality(boardRow-1, k, boardState) && checkLegality(boardRow-1, k+1, boardState) && checkLegality(boardRow-2, k, boardState);
+								if(goodMove == true)
+								{
+									int[] rows = {boardRow, boardRow - 1, boardRow - 1, boardRow-2};
+									int[] cols = {k, k, k+1, k};
+									
+									moves[moveIterator] = new Move(rows, cols, orient);
+									moves[moveIterator].centerCol = k;
+									moves[moveIterator].centerRow = boardRow-1;
+									moveIterator++;
+								}
+							}
+						}
+						if(orient == 2)
+						{
+							if((boardState[boardRow][k] == 0) && (boardState[boardRow][k+1] == 0) && (boardState[boardRow][k+2] == 0)  && (boardState[boardRow-1][k+1] == 0) )
+							{
+								boolean goodMove = checkLegality(boardRow, k, boardState) && checkLegality(boardRow, k+1, boardState) && checkLegality(boardRow, k+2, boardState) && checkLegality(boardRow-1, k+1, boardState);
+								if(goodMove == true)
+								{
+									int[] rows = {boardRow, boardRow, boardRow, boardRow-1};
+									int[] cols = {k, k+1, k+2, k+1};
+									
+									moves[moveIterator] = new Move(rows, cols, orient);
+									moves[moveIterator].centerCol = k+1;
+									moves[moveIterator].centerRow = boardRow;
+									moveIterator++;
+								}
+							}
+						}
+						else if(orient == 3)
+						{
+							if((boardState[boardRow][k] == 0) && (boardState[boardRow-1][k] == 0) && (boardState[boardRow-1][k-1] == 0)  && (boardState[boardRow-2][k] == 0) )
+							{
+								boolean goodMove = checkLegality(boardRow, k, boardState) && checkLegality(boardRow-1, k, boardState) && checkLegality(boardRow-1, k-1, boardState) && checkLegality(boardRow-2, k, boardState);
+								if(goodMove == true)
+								{
+									int[] rows = {boardRow, boardRow - 1, boardRow - 1, boardRow-2};
+									int[] cols = {k, k, k-1, k};
+									
+									moves[moveIterator] = new Move(rows, cols, orient);
+									moves[moveIterator].centerCol = k;
+									moves[moveIterator].centerRow = boardRow-1;
+									moveIterator++;
+								}
+							}
+						}
+					}
+					
 				}
-				//If "if" statement not triggered, only 1 cell on this bottom row of piece...move up a row
 				
 			}
 		}
 		
-			//Third, determine what moves (in relation to first move) can be made on second row
+		for(int m = 0; m < moves.length; m++)
+		{
+			if(moves[m] == null)
+				break;
+			for(int n = 0; n < moves[m].col.length; n++)
+			{
+				int col = moves[m].col[n];
+				int row = moves[m].row[n];
+				moves[m].score += weightedBoard[row][col];	
+			}
+		}
 		
-			//Next row (if applicable)
+		double highestScore = 0;
+		int highestRecord = 0;
+		for(int l = 0; l < moves.length; l++)
+		{
+			if(moves[l] == null)
+				break;
+			if(moves[l].score >= highestScore)
+			{
+				highestScore = moves[l].score;
+				highestRecord = l;
+			}
+		}
 		
-			//Next row (if applicable)
-		
-		//Whenever a valid move is determined, save it. Give it a score using weightedBoard, then continue until all possible moves are made
-		
-		//Reorient piece, repeat
+		//Now compare current position to desired position...choose move to do
+			//If orientation is different, change orientation first
+		if(currentPiece.getOrientation() != moves[highestRecord].orient)
+		{
+			move = "lrotate";
+		}
+		else if(currentPiece.getCol() != moves[highestRecord].centerCol)
+		{
+			if(currentPiece.getCol() > moves[highestRecord].centerCol)
+			{
+				move = "left";
+			}
+			else
+			{
+				move = "right";
+			}
+		}
+		else if(currentPiece.getRow() != moves[highestRecord].centerRow)
+		{
+			move = "drop";
+		}
 		
 		
 		return move;
+	}
+	
+	public boolean checkLegality(int boardRow, int boardCol, int[][] boardState)
+	{
+		if(boardRow > 19 || boardRow < 0)
+			return false;
+		else if(boardCol > 9 || boardCol < 0)
+			return false;
+		else if(boardState[boardRow][boardCol] != 0)
+			return false;
+		else
+			return true;
 	}
 	
 	public double[][] getWeightedBoard(int[][] boardState)
@@ -255,6 +657,7 @@ public class MovePicker extends Thread{
 				weightedBoard[row][col] = totalWeight;
 			}
 		}
+		return weightedBoard;
 	}
 	
 	/*
